@@ -97,11 +97,11 @@ $(document).ready(function() {
 		});
 
 		// loading
-		var loadingContainer = document.createElement('loadingCont'),
-			skThreeBounce = document.createElement('sk-three-bounce'),
-			skBounce1 = document.createElement('sk-bounce1'),
-			skBounce2 = document.createElement('sk-bounce2'),
-			skBounce3 = document.createElement('sk-bounce3');
+		var loadingContainer = document.createElement('div'),
+			skThreeBounce = document.createElement('div'),
+			skBounce1 = document.createElement('div'),
+			skBounce2 = document.createElement('div'),
+			skBounce3 = document.createElement('div');
 		
 		$(skThreeBounce).addClass('sk-three-bounce');
 		$(skBounce1).addClass('sk-child').addClass('sk-bounce1');
@@ -118,7 +118,12 @@ $(document).ready(function() {
 
 			$(getBookingBlur).text('');
 
-			if (data) {
+			if ((data.length === 1 && data[0].pros === '' && data[0].cons === '') || !data) {
+				var notFoundText = document.createElement('div');
+
+				$(notFoundText).addClass('notFoundText').text('Comment not Found')
+				$(getBookingBlur).append(notFoundText);
+			} else if (data) {
 				// console.log("data", data);
 				var limit = 10;
 				if (getMaxComment > data.length) {
@@ -165,8 +170,6 @@ $(document).ready(function() {
 						$(getBookingBlur).append(commentList);
 					}
 				}
-			} else {
-				// not found
 			}
 		});
 

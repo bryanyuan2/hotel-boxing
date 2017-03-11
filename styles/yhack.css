@@ -91,6 +91,14 @@
 	text-align: center;
 }
 
+.notFoundText {
+	font-weight: 700;
+	margin-top: 12px;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 32px;
+}
+
 /* loading */
 /* https://github.com/tobiasahlin/SpinKit/blob/master/css/spinkit.css */
 
