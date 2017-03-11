@@ -63,7 +63,16 @@ function BDCLib(){
                 show_languages_spoken: '1',
                 show_review_score_word: '1',
                 show_timezone: '1'
-            }, cb);
+            }, function(data){
+                if(data[0]){
+                    exports.requestBookingDotCom('getHotelDescriptionPhotos', {
+                        hotel_ids: hotelId
+                    }, function(photoData){
+                        data[0].photos = photoData;
+                        cb(data);
+                    });
+                }
+            });
     };
     
     exports.getHotelReviews = function(hotelId, cb){
@@ -137,7 +146,7 @@ function BDCLib(){
     };
     
     exports.debug = function(){
-        //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
+        exports.getHotelInfo('725241', function(data){_debug('get info', data)});
         //exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
 
         // cache test
