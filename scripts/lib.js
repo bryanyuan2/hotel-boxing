@@ -74,50 +74,60 @@ function BDCLib(){
             }, cb);
     };
 
-    exports.getHotelKeywordReviews = function(hotelId, query, cb){
+    exports.getHotelKeywordReviews = function(hotelId, queryArray, cb){
         exports.getHotelReviews(hotelId, function(reviews){
-            var result = {
-                score: 0,
-                pros: [],
-                cons: []
-            };
-            var fieldProfile = {
-                pros: 1,
-                cons: -1
-            };
-            var isMatchKeyword = function(text, query){
-                var re = new RegExp(query, 'i');
-                return !!text.match(re);
-            };
-            var review;
-            var ageYears;
-            var ageMs;
-            var now = new Date();
-            var matchedReviewCount = 0;
-            for(var i = 0; i < reviews.length; i++){
-                review = reviews[i];
-                for(var field in fieldProfile){
-                    if(review[field] && isMatchKeyword(review[field], query)){
-                        matchedReviewCount++;
-                        result[field].push({
-                            text: review[field],
-                            date: review.date,
-                            title: review.headline,
-                            author: review.author
-                        });
-                        ageMs = now.getTime() - (new Date(review.date)).getTime();
-                        ageYears = (ageMs === 0 ? 1 : ageMs) / (86400000 * 365);
-                        result.score += fieldProfile[field] / ageYears;
+            var results = {};
+            var getKeywordReview = function(query){
+                var result = {
+                    score: 0,
+                    pros: [],
+                    cons: []
+                };
+                var fieldProfile = {
+                    pros: 1,
+                    cons: -1
+                };
+                var isMatchKeyword = function(text, query){
+                    var re = new RegExp(query, 'i');
+                    return !!text.match(re);
+                };
+                var review;
+                var ageYears;
+                var ageMs;
+                var now = new Date();
+                var matchedReviewCount = 0;
+                for(var i = 0; i < reviews.length; i++){
+                    review = reviews[i];
+                    for(var field in fieldProfile){
+                        if(review[field] && isMatchKeyword(review[field], query)){
+                            matchedReviewCount++;
+                            result[field].push({
+                                text: review[field],
+                                date: review.date,
+                                title: review.headline,
+                                author: review.author
+                            });
+                            ageMs = now.getTime() - (new Date(review.date)).getTime();
+                            ageYears = (ageMs === 0 ? 1 : ageMs) / (86400000 * 365);
+                            result.score += fieldProfile[field] / ageYears;
+                        }
                     }
                 }
+                if(matchedReviewCount !== 0){
+                    result.score /= matchedReviewCount;
+                }
+                else{
+                    result.score = false;
+                }
+                return result;
+            };
+            if(typeof queryArray === 'string'){
+                queryArray = [queryArray];
             }
-            if(matchedReviewCount !== 0){
-                result.score /= matchedReviewCount;
+            for(var i = 0; i < queryArray.length; i++){
+                results[queryArray[i]] = getKeywordReview(queryArray[i]);
             }
-            else{
-                result.score = false;
-            }
-            cb(result);
+            cb(results);
         });
     };
     
@@ -145,6 +155,7 @@ function BDCLib(){
         //exports.getHotelKeywordReviews('270817', 'breakfast', function(data){_debug('keyword review', data);});
         //喜來登
         //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
+        //exports.getHotelKeywordReviews('334583', ['breakfast', 'dinner', 'bed'], function(data){_debug('keyword review', data);});
         // Canal House Suites at Sofitel Legend The Grand Amsterdam 
         //exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
         // Crane Hotel Faralda
