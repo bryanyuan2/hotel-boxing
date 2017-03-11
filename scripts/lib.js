@@ -1,7 +1,8 @@
 function BDCLib(){
     var _store = {
         cache: {},
-        favorite: {}
+        favorite: {},
+        cmpWords: {}
     };
     var _getCache = function(url){
         if(_store.cache[url]){
@@ -90,6 +91,7 @@ function BDCLib(){
             };
             var review;
             var ageYears;
+            var ageMs;
             var now = new Date();
             var matchedReviewCount = 0;
             for(var i = 0; i < reviews.length; i++){
@@ -103,12 +105,18 @@ function BDCLib(){
                             title: review.headline,
                             author: review.author
                         });
-                        ageYears = (now.getTime() - (new Date(review.date)).getTime()) / (86400000 * 365);
+                        ageMs = now.getTime() - (new Date(review.date)).getTime();
+                        ageYears = (ageMs === 0 ? 1 : ageMs) / (86400000 * 365);
                         result.score += fieldProfile[field] / ageYears;
                     }
                 }
             }
-            result.score /= matchedReviewCount;
+            if(matchedReviewCount !== 0){
+                result.score /= matchedReviewCount;
+            }
+            else{
+                result.score = false;
+            }
             cb(result);
         });
     };
@@ -138,7 +146,16 @@ function BDCLib(){
         //喜來登
         //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
         // Canal House Suites at Sofitel Legend The Grand Amsterdam 
-        exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
+        //exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
+        // Crane Hotel Faralda
+        //exports.getHotelKeywordReviews('1139273', 'breakfast', function(data){_debug('keyword review', data);});
+    
+        // keywords test    
+        //exports.addComparisonKeyword('breakfast');
+        //exports.addComparisonKeyword('kerker');
+        //exports.addComparisonKeyword('sound');
+        //exports.removeComparisonKeyword('kerker');
+        //_debug('keyword', exports.getComparisonKeywords());
     };
 
     exports.addFavoriteHotel = function(hotelId, done){
@@ -169,6 +186,27 @@ function BDCLib(){
         return _store.favorite;
     };
     
+    exports.addComparisonKeyword = function(keyword){
+        if(_store.cmpWords[keyword]){
+            _debug('warning: duplicate cmpWords ' + keyword);
+            return false;
+        }
+        _store.cmpWords[keyword] = true;
+        return true;
+    };
+    
+    exports.removeComparisonKeyword = function(keyword){
+        if(!_store.cmpWords[keyword]){
+            _debug('warning: not found cmpWords ' + keyword);
+            return false;
+        }
+        delete _store.cmpWords[keyword];
+        return true;
+    };
+    
+    exports.getComparisonKeywords = function(){
+        return Object.keys(_store.cmpWords);
+    };
+    
     return exports;
 };
-

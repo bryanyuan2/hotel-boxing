@@ -48,7 +48,8 @@
       "styles/font-awesome/fonts/*.woff2",
       "styles/*",
       "*.ttf",
-      "*.svg"
+      "*.svg",
+      "images/like.png"
   ],
 
   "browser_action": {
