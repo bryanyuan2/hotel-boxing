@@ -27,7 +27,7 @@
       ],
       "matches": [
         //"*://*.mail.yahoo.com/*"
-        "*://*.google.com.tw/*"
+        "*://www.booking.com/*"
       ]
    }],
   "web_accessible_resources": [

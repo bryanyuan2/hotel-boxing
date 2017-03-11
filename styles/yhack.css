@@ -1,7 +1,7 @@
 /*
     hackday-basic-chrome-ext for hackday usage
 */
-.dom {
+.booking-blur {
     position: absolute;
     top: 0;
     left: 0;
@@ -9,4 +9,5 @@
     color: #FFF;
     width: 100px;
     height: 100px;
+    z-index: 100;
 }

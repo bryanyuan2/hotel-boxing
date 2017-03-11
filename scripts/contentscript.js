@@ -10,9 +10,8 @@ $(document).ready(function() {
 
     // create dom
     var dom = document.createElement("div");
-    $(dom).addClass("dom").text('test');
-    $(body).append(dom) ;
-    
+    $(dom).addClass("booking-blur").text('test');
+    $("body").append(dom); 
 });
 })();
 
