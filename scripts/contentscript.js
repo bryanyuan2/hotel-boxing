@@ -199,7 +199,7 @@ $(document).ready(function() {
 
     
     var kwColumnList = [],
-        kwList = lib.getComparisonKeywords || ["breakfast", "parking", "pool"];
+        kwList = lib.getComparisonKeywords();
 
 
     var kwColumn = document.createElement("div");
