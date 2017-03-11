@@ -30,7 +30,9 @@
         "scripts/contentscript.js"
       ],
       "css": [
-        "styles/yhack.css"
+        "styles/yhack.css",
+        "styles/pktable.css",
+        "styles/font-awesome/css/font-awesome.css"
       ],
       "matches": [
         "*://www.booking.com/*"
@@ -38,7 +40,15 @@
    }],
   "web_accessible_resources": [
       "scripts/jquery.min.map",
-      "images/yahoo.png"
+      "images/yahoo.png",
+      "styles/font-awesome/fonts/*.eot",
+      "styles/font-awesome/fonts/*.svg",
+      "styles/font-awesome/fonts/*.ttf",
+      "styles/font-awesome/fonts/*.woff",
+      "styles/font-awesome/fonts/*.woff2",
+      "styles/*",
+      "*.ttf",
+      "*.svg"
   ],
 
   "browser_action": {
