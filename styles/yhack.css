@@ -1,0 +1,12 @@
+/*
+    hackday-basic-chrome-ext for hackday usage
+*/
+.dom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: red;
+    color: #FFF;
+    width: 100px;
+    height: 100px;
+}

@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "name": "bryanyuan2-hackday-basic-chrome-ext",
+  "description": "bryanyuan2-hackday-basic-chrome-ext",
+  "version": "0.1",
+  "icons": {
+      "128": "icons/icon128x128.png",
+      "48": "icons/icon48x48.png",
+      "16": "icons/icon16x16.png"
+  },
+  "permissions": ["storage" , "tabs" , "*://*.mail.yahoo.com/*" ],
+  "background": {
+    "scripts": [
+      "scripts/jquery-2.0.0.min.js",
+      "scripts/jquery.min.map"
+    ]
+  },
+  "content_scripts": [{
+      "all_frames": true,
+      "js": [
+        "scripts/jquery-2.0.0.min.js",
+        "scripts/jquery.min.map",
+        "scripts/contentscript.js"
+      ],
+      "css": [
+        "styles/yhack.css"
+      ],
+      "matches": [
+        //"*://*.mail.yahoo.com/*"
+        "*://*.google.com.tw/*"
+      ]
+   }],
+  "web_accessible_resources": [
+      "scripts/jquery.min.map",
+      "images/yahoo.png"
+  ],
+
+  "browser_action": {
+      "default_icon": "icons/icon48x48.png"
+  }
+}
