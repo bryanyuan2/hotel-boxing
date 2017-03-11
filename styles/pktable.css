@@ -1,0 +1,112 @@
+#pktable-container {
+    background-color: rgba(33, 33, 33, 0.8);;/*rgba(245, 245, 245, 0.5);*/ /*#F5F5F5*/ /*#212121*/
+    color: #212121;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    height: 100%;
+    left: 0px;
+    padding: 30px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 100;
+}
+
+.booking-pktable {
+    border-collapse: separate;
+    border-spacing: 0;
+    height: calc(100% - 60px);
+    width: calc(100% - 60px);
+}
+
+
+.booking-pktable th, .booking-pktable td {
+    background-color: #F5F5F5;
+    border: 1px solid #424242;
+    line-height: 30px;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.booking-pktable tr:first-child td:first-child{
+    border-top-left-radius: 10px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+.booking-pktable tr:first-child td:last-child{
+    border-top-right-radius: 10px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+}
+.booking-pktable tr:last-child td:first-child{
+    border-bottom-left-radius: 10px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    text-align: left;
+}
+.booking-pktable tr:last-child td:last-child{
+    border-bottom-right-radius: 10px;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+/* first row */
+.booking-pktable tr:first-child td{
+    border-top-width: 2px;
+}
+/* last row */
+.booking-pktable tr:last-child td{
+    border-bottom-width: 2px;
+}
+/* first column */
+.booking-pktable tr > :first-child {
+    border-left-width: 2px;
+    text-align: center;
+    width: 150px;
+}
+/* last column */
+.booking-pktable tr > :last-child {
+    border-right-width: 2px;
+    text-align: center;
+}
+
+#booking-input-kw {
+    border-radius: 5px;
+    line-height: 20px;
+    margin: 0px 5px;
+    padding: 0px 5px;
+    width: 105px;
+}
+
+#booking-add-kw-button {
+    color: #4CAF50;
+}
+
+
+
+.pktable-kw-column {
+    background-color: #F5F5F5;
+    border: 1px solid #424242;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    display: block;
+    line-height: 30px;
+    /*padding: 5px;*/
+    vertical-align: middle;
+}
+
+.pktable-kw-column-0 {
+    width: 200px;
+}
+
+.pktable-kw-column div{
+    display: block;
+}
+
+.pktable-kw-cell {
+    border: 1px solid #424242;
+    line-height: 30px;
+}
+
+
+
