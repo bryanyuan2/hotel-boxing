@@ -84,6 +84,24 @@
 	vertical-align: middle;
 }
 
+.hotelCartNow {
+	background-color: #000000;
+	color: #FFFFFF;
+	font-size: 32px;
+	text-align: center;
+}
+
+.notFoundText {
+	font-weight: 700;
+	margin-top: 12px;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 32px;
+}
+
+/* loading */
+/* https://github.com/tobiasahlin/SpinKit/blob/master/css/spinkit.css */
+
 .sk-three-bounce:before {
 	content: '';
 	height: 50%;
@@ -95,27 +113,26 @@
 	width: 100%;
 	height: 100%;
 }
-/* loading */
-/* https://github.com/tobiasahlin/SpinKit/blob/master/css/spinkit.css */
 
 .sk-three-bounce {
   margin: 40px auto;
   width: 80px;
-  text-align: center; }
-  .sk-three-bounce .sk-child {
-    width: 20px;
-    height: 20px;
-    background-color: #333;
-    border-radius: 100%;
-    display: inline-block;
-    -webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
-            animation: sk-three-bounce 1.4s ease-in-out 0s infinite both; }
-  .sk-three-bounce .sk-bounce1 {
-    -webkit-animation-delay: -0.32s;
-            animation-delay: -0.32s; }
-  .sk-three-bounce .sk-bounce2 {
-    -webkit-animation-delay: -0.16s;
-            animation-delay: -0.16s; }
+  text-align: center;
+}
+.sk-three-bounce .sk-child {
+width: 20px;
+height: 20px;
+background-color: #FFFFFF;
+border-radius: 100%;
+display: inline-block;
+-webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
+        animation: sk-three-bounce 1.4s ease-in-out 0s infinite both; }
+.sk-three-bounce .sk-bounce1 {
+-webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s; }
+.sk-three-bounce .sk-bounce2 {
+-webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s; }
 
 @-webkit-keyframes sk-three-bounce {
   0%, 80%, 100% {

@@ -12,6 +12,7 @@ $(document).ready(function() {
 
     var dom = document.createElement('div'),
     	hotelCartCnt = document.createElement('div'),
+    	hotelCartNow = document.createElement('div'),
     	getBookingBlur = '.booking-blur',
     	getBookingList = '.booking-list',
     	getBookingSel = '.sr_item';
@@ -24,8 +25,11 @@ $(document).ready(function() {
 	// cart container
 
 	$(hotelCartCnt).addClass('hotelCartCnt');
+	$(hotelCartNow).addClass('hotelCartNow').text('PK NOW');
 
     $(dom).addClass('booking-blur');
+
+    $(hotelCartCnt).append(hotelCartNow);
 	$("body").append(dom).append(hotelCartCnt);
 	$(getBookingBlur).hide(); 
 
@@ -92,14 +96,12 @@ $(document).ready(function() {
 
 		});
 
-
-
 		// loading
-		var loadingContainer = document.createElement('loadingCont'),
-			skThreeBounce = document.createElement('sk-three-bounce'),
-			skBounce1 = document.createElement('sk-bounce1'),
-			skBounce2 = document.createElement('sk-bounce2'),
-			skBounce3 = document.createElement('sk-bounce3');
+		var loadingContainer = document.createElement('div'),
+			skThreeBounce = document.createElement('div'),
+			skBounce1 = document.createElement('div'),
+			skBounce2 = document.createElement('div'),
+			skBounce3 = document.createElement('div');
 		
 		$(skThreeBounce).addClass('sk-three-bounce');
 		$(skBounce1).addClass('sk-child').addClass('sk-bounce1');
@@ -116,50 +118,57 @@ $(document).ready(function() {
 
 			$(getBookingBlur).text('');
 
-			// console.log("data", data);
-			var limit = 10;
-			if (getMaxComment > data.length) {
-				limit = data.length;
-			} else {
-				limit = getMaxComment;
-			}
+			if ((data.length === 1 && data[0].pros === '' && data[0].cons === '') || !data) {
+				var notFoundText = document.createElement('div');
 
-			for (var item=0;item<limit;item++) {
-				// create comment dom
-				var commentList = document.createElement('div'),
-					averageScore = document.createElement('span'),
-					commentCnt = '';
-
-				var getPros = data[item].pros || '',
-					getCons = data[item].cons || '';
-					setCls = '';
-
-				//console.log("item", data[item]);
-				if (getPros) {
-					
-					var commentList = document.createElement('div');
-
-					if (getPros.length > setCommentTrunc) {
-						commentCnt = data[item].pros.substring(0, setCommentTrunc) + ' ...'; 
-					} else {
-						commentCnt = getPros;
-					}
-					setCls = 'pros';
-				} else if (getCons) {
-					var commentList = document.createElement('div');
-
-					if (getCons.length > setCommentTrunc) {
-						commentCnt = data[item].cons.substring(0, setCommentTrunc) + ' ...'; 
-					} else {
-						commentCnt = getCons;
-					}
-					setCls = 'cons';
+				$(notFoundText).addClass('notFoundText').text('Comment not Found')
+				$(getBookingBlur).append(notFoundText);
+			} else if (data) {
+				// console.log("data", data);
+				var limit = 10;
+				if (getMaxComment > data.length) {
+					limit = data.length;
+				} else {
+					limit = getMaxComment;
 				}
 
-				if (commentCnt) {
-					$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
-					$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
-					$(getBookingBlur).append(commentList);
+				for (var item=0;item<limit;item++) {
+					// create comment dom
+					var commentList = document.createElement('div'),
+						averageScore = document.createElement('span'),
+						commentCnt = '';
+
+					var getPros = data[item].pros || '',
+						getCons = data[item].cons || '';
+						setCls = '';
+
+					//console.log("item", data[item]);
+					if (getPros) {
+						
+						var commentList = document.createElement('div');
+
+						if (getPros.length > setCommentTrunc) {
+							commentCnt = data[item].pros.substring(0, setCommentTrunc) + ' ...'; 
+						} else {
+							commentCnt = getPros;
+						}
+						setCls = 'pros';
+					} else if (getCons) {
+						var commentList = document.createElement('div');
+
+						if (getCons.length > setCommentTrunc) {
+							commentCnt = data[item].cons.substring(0, setCommentTrunc) + ' ...'; 
+						} else {
+							commentCnt = getCons;
+						}
+						setCls = 'cons';
+					}
+
+					if (commentCnt) {
+						$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
+						$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
+						$(getBookingBlur).append(commentList);
+					}
 				}
 			}
 		});

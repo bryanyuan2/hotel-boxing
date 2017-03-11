@@ -24,6 +24,7 @@
       "js": [
         "scripts/jquery-2.0.0.min.js",
         "scripts/lib.js",
+        "scripts/lib.stemmer.js",
         "scripts/lib/jquery.blurr.min.js",
         "scripts/contentscript.js"
       ],
