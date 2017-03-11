@@ -101,12 +101,20 @@ function BDCLib(){
                 };
                 var isMatchKeyword = function(text, query){
                     // simple version
-                    var re = new RegExp(query, 'i');
-                    return !!text.match(re);
+                    //var re = new RegExp(query, 'i');
+                    //return !!text.match(re);
                     
                     // apply Porter stemming algorithm
-                    //var textTokens = text.
-                    //TODO
+                    var textTokens = text.split(/[^\w]/).filter(function(s){return s;}).map(function(s){return stemmer(s);});
+                    var queryTokens = query.split(/[^\w]/).filter(function(s){return s;}).map(function(s){return stemmer(s);});
+                    for(var i = 0; i < textTokens.length; i++){
+                        for(var j = 0; j < queryTokens.length; j++){
+                            if(textTokens[i] === queryTokens[j]){
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
                 };
                 var review;
                 var ageYears;
