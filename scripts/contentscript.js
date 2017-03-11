@@ -183,6 +183,8 @@ $(document).ready(function() {
     	$(getBookingBlur).append(commentList);
     }
 
+
+    // PK table
     var pktableContainer = document.createElement("div");
     $(pktableContainer).attr("id", "pktable-container");
     
@@ -221,11 +223,33 @@ $(document).ready(function() {
                         "</tbody>" +
                     "</table>";
 
-    $(pktableContainer).append(pktable);
-    $("body").append(pktableContainer); 
+    
+    var kwColumnList = [],
+        kwList = ["breakfast", "parking", "pool"];
+
+
+    var kwColumn = document.createElement("div");
+    $(kwColumn).addClass( "pktable-kw-column pktable-kw-column-0" );
+    
+    // kw column
+    var imgCell = document.createElement("div");
+    $(imgCell).addClass( "pktable-kw-cell pktable-kw-cell-0" );
+    kwColumn.append(imgCell);
+
+    kwList.forEach(function(ele, ind){
+        var kwCell = document.createElement("div");
+        $(kwCell).addClass( "pktable-kw-cell " + "pktable-kw-cell-" + +(ind + 1) );
+        $(kwCell).text(ele);
+        kwColumn.append(kwCell);
+    });
+    var addBtnCell = document.createElement("div");
+    $(addBtnCell).addClass( "pktable-kw-cell pktable-kw-cell-" + +(kwList.length + 1) );
+    var atnBtn = "<input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i>";
+    kwColumn.append(addBtnCell);
+    kwColumnList.push(kwColumn);
 
     $("#booking-add-kw-button").click(function(){
-        addNewRow( $("#booking-input-kw").val() );
+        addNewFeature( $("#booking-input-kw").val() );
     });
     $("#booking-add-kw-button").hover(function(){
         $(this).addClass("fa-lg");
@@ -235,22 +259,34 @@ $(document).ready(function() {
 
     $("#booking-input-kw").blur(function(){
     });
-
-    lib = new BDCLib();
-    lib.debug();
-
     
-    var hotelIdList = ["725241", "270817", "334583", "1279339"],
-        kw = "breakfast";
+    var hotelIdList = ["725241", "270817", "334583", "1279339"];
 
-    hotelIdList.forEach(function(ele, ind, kw) {
-        lib.getHotelKeywordReviews(ele, kw, addToHotelFeatures);
+    hotelIdList.forEach(function(ele, ind, val) {
+        var kwColumn = document.createElement("div");
+        $(kwColumn).attr("class", "pktable-kw-column" + +(ind + 1));
+        lib.getHotelKeywordReviews(ele, kwList, updateHotelTable);
     });
+
+    kwColumnList.forEach(function(ele){
+        $(pktableContainer).append(ele);
+    });
+    $("body").append(pktableContainer); 
 
 });
 })();
 
-function addToHotelFeatures (result) {
+function updateHotelTable (result) {
+    setHotelKwScore(result);
+    orderHotelColumns();
+}
+
+
+function orderHotelColumns () {
+
+}
+
+function setHotelKwScore (result) {
     console.log(result);
     
     var hotelColumnList = [];
@@ -261,4 +297,6 @@ function addToHotelFeatures (result) {
     return;
 }
 
-
+function addNewKw (kw) {
+    // TODO
+}
