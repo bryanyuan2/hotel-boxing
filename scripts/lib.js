@@ -72,10 +72,45 @@ function BDCLib(){
                 show_review_score_word: '1'
             }, cb);
     };
+
+    exports.getHotelKeywordReviews = function(hotelId, query, cb){
+        exports.getHotelReviews(hotelId, function(reviews){
+            var result = {
+                score: 0,
+                pros: [],
+                cons: []
+            };
+            var fieldProfile = {
+                pros: 1,
+                cons: -1
+            };
+            var isMatchKeyword = function(text, query){
+                var re = new RegExp(query, 'i');
+                return !!text.match(re);
+            };
+            var review;
+            var ageYears;
+            var now = new Date();
+            var matchedReviewCount = 0;
+            for(var i = 0; i < reviews.length; i++){
+                review = reviews[i];
+                for(var field in fieldProfile){
+                    if(review[field] && isMatchKeyword(review[field], query)){
+                        matchedReviewCount++;
+                        result[field].push(review[field]);
+                        ageYears = (now.getTime() - (new Date(review.date)).getTime()) / (86400000 * 365);
+                        result.score += fieldProfile[field] / ageYears;
+                    }
+                }
+            }
+            result.score /= matchedReviewCount;
+            cb(result);
+        });
+    };
     
     exports.debug = function(){
-        exports.getHotelInfo('725241', function(data){_debug('get info', data)});
-        exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
+        //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
+        //exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
 
         // cache test
         //setTimeout(function(){
@@ -84,11 +119,19 @@ function BDCLib(){
         //}, 5000);
         //
         
-        exports.addFavoriteHotel('725241', function(){
-            _debug('favorite list:', exports.getFavoriteHotels());
-            exports.removeFavoriteHotel('725241');
-            _debug('favorite list:', exports.getFavoriteHotels());
-        });
+        // favorite hotel test
+        //exports.addFavoriteHotel('725241', function(){
+        //    _debug('favorite list:', exports.getFavoriteHotels());
+        //    exports.removeFavoriteHotel('725241');
+        //    _debug('favorite list:', exports.getFavoriteHotels());
+        //});
+
+        //exports.getHotelKeywordReviews('725241', 'breakfast', function(data){_debug('keyword review', data);});
+
+        //福華
+        //exports.getHotelKeywordReviews('270817', 'breakfast', function(data){_debug('keyword review', data);});
+        //喜來登
+        //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
     };
 
     exports.addFavoriteHotel = function(hotelId, done){
