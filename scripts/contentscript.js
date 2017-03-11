@@ -12,7 +12,6 @@ $(document).ready(function() {
     var _store = {
         cache: {}
     };
-	//var hotelIdList = ["725241", "270817", "334583", "1279339"];
 
 	var CONST_CONFIGS = {
 			getMaxComment: 50,
@@ -233,6 +232,7 @@ $(document).ready(function() {
     $("body").append(dom);
 
     var generatePKBoxing = function(hotelIdList) {
+    	//var hotelIdList = ["725241", "270817", "334583", "1279339"];
     	//var getKeywordList = lib.getComparisonKeywords();
     	var getKeywordList = ['breakfirst', 'service', 'bed', 'gum'];
 
@@ -290,30 +290,34 @@ $(document).ready(function() {
 				var sectionDom = document.createElement('section'),
 			    	h4Dom = document.createElement('h4'),
 			    	ulDom = document.createElement('ul'),
-			    	imgDom = document.createElement('img');
+			    	imgDom = document.createElement('img'),
+			    	linkDom = document.createElement('a');
 
 			    var getHotelID = data['id'];
 
 			    lib.getHotelInfo(getHotelID, function(hotelInfo){
-					//console.log('getHotelInfo',hotelInfo);
+					console.log('getHotelInfo',hotelInfo);
 
 					var getHotelName = '',
+						getUrl = hotelInfo[0].url,
 						getPhotoUrl = hotelInfo[0].photos[0].url_max300,
 						getHotelIDc = '';
-
-					//console.log('getPhotoUrl', getPhotoUrl);
 
 					if (hotelInfo[0]) {
 						getHotelName = hotelInfo[0].name;
 						getHotelIDc = hotelInfo[0].hotel_id;
 					}
 
+					$(linkDom).attr('href', getUrl)
+							  .attr('target', '_blank')
+							  .append(getHotelName);
+
 					$(imgDom).attr('src', getPhotoUrl)
 							 .attr('width', '120')
 							 .attr('height', '80');
 
 				    $(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
-				    $(h4Dom).append(getHotelName);
+				    $(h4Dom).append(linkDom);
 
 					for(var point=0;point<getKeywordList.length;point++) {
 						//console.log('target', data.data[getKeywordList[point]]);

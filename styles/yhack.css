@@ -192,8 +192,14 @@ display: inline-block;
     padding: 18px 0 15px;
     margin: 0 0 6px;
     background: #00a1ff;
-    color: white;
+    color: #FFFFFF;
     height: 48px;
+}
+
+.pkdom .plan-tier h4 a,
+.pkdom .plan-tier h4 a:visited,
+.pkdom .plan-tier h4 a:link {
+	color: #FFFFFF;
 }
 
 .pkdom .plan-tier ul {
