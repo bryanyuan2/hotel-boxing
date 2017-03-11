@@ -2,12 +2,19 @@
     hackday-basic-chrome-ext for hackday usage
 */
 .booking-blur {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    background-color: red;
-    color: #FFF;
-    width: 100px;
-    height: 100px;
+    width: 420px;
+    height: 100%;
     z-index: 100;
+    background-color: rgba(234, 236, 239, 0.75);
+    //background-color: red;
+}
+
+.booking-list {
+	padding: 2px 2px 2px 10px;
+	font-size: 32px;
+	background-color: #888888;
+	color: #FFFFFF;
 }
