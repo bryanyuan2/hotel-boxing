@@ -70,10 +70,18 @@
 	min-height: 10px;
 }
 
+.hotelCartText {
+	font-size: 14px;
+	margin-left: 3px;
+}
+
 .hotelCartItem {
-	font-size: 12px;
 	padding: 6px 6px 6px 6px;
 	width: 120px;
+}
+
+.hotelCartImg {
+	vertical-align: middle;
 }
 
 .sk-three-bounce:before {

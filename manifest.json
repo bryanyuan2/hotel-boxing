@@ -38,7 +38,8 @@
    }],
   "web_accessible_resources": [
       "scripts/jquery.min.map",
-      "images/yahoo.png"
+      "images/yahoo.png",
+      "images/like.png"
   ],
 
   "browser_action": {

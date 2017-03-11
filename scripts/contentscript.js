@@ -69,11 +69,25 @@ $(document).ready(function() {
 			});
 
 			if (isExisted === false) {
-				var hotelCartItem = document.createElement('div');
+				var hotelCartItem = document.createElement('div'),
+					hotelCartText = document.createElement('span'),
+					hotelCartImg = document.createElement('img');
+
+				var likeImg = chrome.extension.getURL("images/like.png");
+				$(hotelCartImg).addClass('hotelCartImg').attr('src', likeImg);
+				$(hotelCartText).addClass('hotelCartText')
+								.append(getClickDataTitle)
+
 				$(hotelCartItem).addClass('hotelCartItem')
-								.attr('data-id', getClickDataID)				
-								.text(getClickDataTitle);
+								.attr('data-id', getClickDataID)
+								.append(hotelCartImg)				
+								.append(hotelCartText);
 				$(hotelCartCnt).append(hotelCartItem);
+
+				// added addFavoriteHotel
+				lib.addFavoriteHotel(getClickDataID, function(done){
+					console.log("added hotel id", getClickDataID);
+				});
 			}
 
 		});
@@ -98,7 +112,7 @@ $(document).ready(function() {
 		$(getBookingBlur).text('').append(loadingContainer);
 
     	// get hotel review
-		lib.getHoteReviews(hotelID, function(data){
+		lib.getHotelReviews(hotelID, function(data){
 
 			$(getBookingBlur).text('');
 
