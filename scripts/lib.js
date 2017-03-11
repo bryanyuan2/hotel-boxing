@@ -2,7 +2,11 @@ function BDCLib(){
     var _store = {
         cache: {},
         favorite: {},
-        cmpWords: {}
+        cmpWords: {
+            'breakfast': true,
+            'parking': true,
+            'bathroom': true
+        }
     };
     var _getCache = function(url){
         if(_store.cache[url]){
