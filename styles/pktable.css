@@ -7,6 +7,7 @@
     left: 0px;
     padding: 30px;
     position: fixed;
+    text-align: center;
     top: 0px;
     width: 100%;
     z-index: 100;
@@ -96,7 +97,6 @@
 }
 
 .pktable-kw-column-0 {
-    text-align: center;
     width: 200px;
 }
 
@@ -119,3 +119,14 @@
     text-align: left;
 }
 
+.fa-thumbs-up {
+    color: #4CAF50;
+}
+
+.fa-thumbs-down {
+    color: #f44336;
+}
+
+.thumbs-cnt {
+    padding: 5px;
+}

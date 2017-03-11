@@ -196,45 +196,10 @@ $(document).ready(function() {
     // PK table
     var pktableContainer = document.createElement("div");
     $(pktableContainer).attr("id", "pktable-container");
-    
-    // var pktable =   "<table class='booking-pktable'>" +
-    //                     "<tbody>" +
-    //                         "<tr>" +
-    //                             "<td>Hotel</td>" +
-    //                             "<td><img src='http://t-ec.bstatic.com/images/hotel/square200/392/39242578.jpg' alt=''></td>" +
-    //                             "<td><img src='http://s-ec.bstatic.com/images/hotel/square200/728/72839775.jpg' alt=''></td>" +
-    //                             "<td><img src='http://s-ec.bstatic.com/images/hotel/square200/360/36046638.jpg' alt=''></td>" +
-    //                         "</tr>" +
-    //                         "<tr>" +
-    //                             "<td>breakfast</td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                         "</tr>" +
-    //                         "<tr>" +
-    //                             "<td>parking</td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                         "</tr>" +
-    //                         "<tr>" +
-    //                             "<td>pool</td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                         "</tr>" +
-    //                         "<tr>" +
-    //                             "<td><input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i></td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                             "<td></td>" +
-    //                         "</tr>" +
-    //                     "</tbody>" +
-    //                 "</table>";
 
     
     var kwColumnList = [],
-        kwList = ["breakfast", "parking", "pool"];
+        kwList = lib.getComparisonKeywords || ["breakfast", "parking", "pool"];
 
 
     var kwColumn = document.createElement("div");
@@ -275,6 +240,7 @@ $(document).ready(function() {
     });
     
     // set Hotel columns
+    // var hotelIdList = getFavoriteHotels() || ["725241", "270817", "334583", "1279339"];
     var hotelIdList = ["725241", "270817", "334583", "1279339"];
 
     hotelIdList.forEach(function(ele, ind, val) {
@@ -290,7 +256,6 @@ $(document).ready(function() {
         kwList.forEach(function(ele, ind){
             var kwCell = document.createElement("div");
             $(kwCell).addClass( "pktable-kw-cell " + "pktable-kw-cell-" + +(ind + 1) );
-            $(kwCell).text(ele);
             kwColumn.append(kwCell);
         });
 
@@ -312,8 +277,8 @@ function setHotelTable(){
 
 }
 
-function updateHotelTable (id, result) {
-    setHotelKwScore(id, result);
+function updateHotelTable (result) {
+    setHotelKwScore(result.hotelId, result.data);
     orderHotelColumns();
 }
 
@@ -322,21 +287,25 @@ function orderHotelColumns () {
 
 }
 
-function setHotelKwScore (id, result) {
+function setHotelKwScore (id, data) {
     console.log('score');
-    console.log(id);
+    console.log(data);
+    
     
     var hotelColumnList = [];
 
-    // result.forEach( function(element, index) {
-        // $("#" + id + " .pktable-kw-cell-0")
-        // $("#" + id).children
+    data.forEach( function(ele, ind) {
+
+        var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+                        '<span class="thumbs-cnt">' + ele.pros.length + '</span>' +
+                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
+                        '<span class="thumbs-cnt">' + ele.cons.length + '</span>';
+        $("#" + id + " .pktable-kw-cell-" + +(ind + 1) ).append(thumbs);
         
-    // });
+    });
 
     hotelColumn = document.createElement('div');
 
-    // $("#pktable-container")
     return;
 }
 
@@ -344,7 +313,6 @@ function setHotelPhoto(data){
     var id = data[0].hotel_id;
     $("#" + data[0].hotel_id + " .pktable-kw-cell-0").append("<img src='" + data[0].photos[0].url_max300 + "' alt='' height='150' width='150'>");
 
-    // console.log(data[0].photos[0].url_max300);
     // console.log(data);
 }
 
