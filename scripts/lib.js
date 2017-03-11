@@ -65,7 +65,7 @@ function BDCLib(){
             }, cb);
     };
     
-    exports.getHoteReviews = function(hotelId, cb){
+    exports.getHotelReviews = function(hotelId, cb){
         exports.requestBookingDotCom('getBookingcomReviews',
             {
                 hotel_ids: hotelId,
@@ -75,12 +75,12 @@ function BDCLib(){
     
     exports.debug = function(){
         exports.getHotelInfo('725241', function(data){_debug('get info', data)});
-        exports.getHoteReviews('725241', function(data){_debug('get reviews', data)});
+        exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
 
         // cache test
         //setTimeout(function(){
         //    exports.getHotelInfo('725241', function(data){_debug('get info', data)});
-        //    exports.getHoteReviews('725241', function(data){_debug('get reviews', data)});
+        //    exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
         //}, 5000);
         //
         
