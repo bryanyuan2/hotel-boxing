@@ -239,16 +239,26 @@ $(document).ready(function() {
     lib = new BDCLib();
     lib.debug();
 
+    
+    var hotelIdList = ["725241", "270817", "334583", "1279339"],
+        kw = "breakfast";
+
+    hotelIdList.forEach(function(ele, ind, kw) {
+        lib.getHotelKeywordReviews(ele, kw, addToHotelFeatures);
+    });
+
 });
 })();
 
-function addNewRow (kw) {
+function addToHotelFeatures (result) {
+    console.log(result);
     
-    console.log(kw);
-    var newRow =    "<tr>" +
-                        "<td>" +
-                            "<input type='text' id='input-kw' placeholder='What's important to you...'/>"
-                        "</td>" +
-                    "</tr>";
-    return newRow;
+    var hotelColumnList = [];
+
+    hotelColumn = document.createElement('div');
+
+    // $("#pktable-container")
+    return;
 }
+
+

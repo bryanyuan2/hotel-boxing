@@ -16,7 +16,6 @@
   "background": {
     "scripts": [
       "scripts/jquery-2.0.0.min.js",
-      "scripts/jquery.min.map",
       "scripts/lib/jquery.blurr.min.js"
     ]
   },
@@ -24,7 +23,6 @@
       "all_frames": true,
       "js": [
         "scripts/jquery-2.0.0.min.js",
-        "scripts/jquery.min.map",
         "scripts/lib.js",
         "scripts/lib/jquery.blurr.min.js",
         "scripts/contentscript.js"
