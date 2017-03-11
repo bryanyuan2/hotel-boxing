@@ -124,74 +124,9 @@ function BDCLib(){
 
     exports.getHotelKeywordReviews = function(hotelId, queryArray, cb){
         exports.getHotelReviews(hotelId, function(reviews){
-            var results = {};
-            var getKeywordReview = function(query){
-                var result = {
-                    score: 0,
-                    pros: [],
-                    cons: []
-                };
-                var fieldProfile = {
-                    pros: 1,
-                    cons: -1
-                };
-                var isMatchKeyword = function(text, query){
-                    var re = new RegExp(query, 'i');
-                    return !!text.match(re);
-                };
-                var review;
-                var ageYears;
-                var ageMs;
-                var now = new Date();
-                var matchedReviewCount = 0;
-                for(var i = 0; i < reviews.length; i++){
-                    review = reviews[i];
-                    for(var field in fieldProfile){
-                        if(review[field] && isMatchKeyword(review[field], query)){
-                            matchedReviewCount++;
-                            result[field].push({
-                                text: review[field],
-                                date: review.date,
-                                title: review.headline,
-                                author: review.author
-                            });
-                            ageMs = now.getTime() - (new Date(review.date)).getTime();
-                            ageYears = (ageMs === 0 ? 1 : ageMs) / (86400000 * 365);
-                            result.score += fieldProfile[field] / ageYears;
-                        }
-                    }
-                }
-                if(matchedReviewCount !== 0){
-                    result.score /= matchedReviewCount;
-                }
-                else{
-                    result.score = false;
-                }
-
-                return result;
-            };
-            if(typeof queryArray === 'string'){
-                queryArray = [queryArray];
-            }
-            for(var i = 0; i < queryArray.length; i++){
-                results[queryArray[i]] = getKeywordReview(queryArray[i]);
-            }
-
-            if (hotelId) {
-                // added hotelId
-                results.id = hotelId;
-            }
-
-            cb(results);
-        });
-    };
-
-    /*
-    exports.getHotelKeywordReviews = function(hotelId, queryArray, cb){
-        exports.getHotelReviews(hotelId, function(reviews){
             var results = {
                 hotelId: hotelId,
-                data: []
+                data: {}
             };
             var getKeywordReview = function(query){
                 var result = {
@@ -258,7 +193,7 @@ function BDCLib(){
             for(var i = 0; i < queryArray.length; i++){
                 review = getKeywordReview(queryArray[i]);
                 review.query = queryArray[i];
-                results.data.push(review);
+                results.data[queryArray[i]] = review;
             }
 
             if (hotelId) {
@@ -269,7 +204,6 @@ function BDCLib(){
             cb(results);
         });
     };
-    */
     
     exports.debug = function(){
         //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
