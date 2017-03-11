@@ -183,6 +183,7 @@ function BDCLib(){
                 else{
                     result.score = false;
                 }
+
                 return result;
             };
             if(typeof queryArray === 'string'){
@@ -194,6 +195,12 @@ function BDCLib(){
                 review.query = queryArray[i];
                 results.data.push(review);
             }
+
+            if (hotelId) {
+                // added hotelId
+                results.id = hotelId;
+            }
+
             cb(results);
         });
     };

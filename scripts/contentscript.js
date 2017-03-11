@@ -8,76 +8,258 @@ $(document).ready(function() {
 	lib = new BDCLib();
     // lib.debug();
 
-    var comments = ['great room', 'this is a awesome trip', 'I think the room service is not very well'];
+    var comments = [];
+    var _store = {
+        cache: {}
+    };
+	var hotelIdList = ["725241", "270817", "334583", "1279339"];
+
+    var generatePK = function() {
+    	//var getKeywordList = lib.getComparisonKeywords();
+    	var getKeywordList = ['breakfirst', 'service', 'bed', 'gum'];
+
+    	// init pkinput, pkdom
+    	var pkinput = document.createElement('div');
+    	var pkoverall = document.createElement('div');
+    	var pkdom = document.createElement('div');
+	    $(pkdom).addClass('pkdom');
+	    $(pkinput).addClass('pkinput');
+	    $(pkoverall).addClass('pkoverall');
+
+    	// imput dom
+    	var inputdom = document.createElement('input');
+    	inputdom.setAttribute("type", "text");
+    	inputdom.setAttribute("name", "find");
+    	inputdom.setAttribute("placeholder", "please input your keyword ...");
+
+    	$(inputdom).addClass('inputdom');
+
+	    $(pkinput).append(inputdom);
+
+		// render standrad column
+		var sectionDom = document.createElement('section'),
+	    	h4Dom = document.createElement('h4'),
+	    	ulDom = document.createElement('ul');
+
+	    $(sectionDom).attr('id', 'catepk').addClass('sectionDom').addClass('lift').addClass('plan-tier');
+	    $(h4Dom).append('ROUND');
+
+	    for (var index =0;index<getKeywordList.length;index++) {
+	    	var liDom = document.createElement('li');
+	    	liDom.append(getKeywordList[index]);
+	    	$(ulDom).append(liDom);
+	    }
+
+	    $(sectionDom).append(h4Dom).append(ulDom);
+		$(pkdom).append(sectionDom);
+
+		//
+
+		for(var hotel=0;hotel<hotelIdList.length;hotel++) {
+
+			var currHotel = hotelIdList[hotel];
+
+			lib.getHotelKeywordReviews(hotelIdList[hotel], getKeywordList, function(data){
+				console.log('== getHotelKeywordReviews', data);
+
+				var sectionDom = document.createElement('section'),
+			    	h4Dom = document.createElement('h4'),
+			    	ulDom = document.createElement('ul');
+
+			    var getHotelID = data['id'];
+
+			    lib.getHotelInfo(getHotelID, function(hotelInfo){
+					console.log('getHotelInfo',hotelInfo);
+
+					var getHotelName = '',
+						getHotelIDc = '';
+
+					if (hotelInfo[0]) {
+						getHotelName = hotelInfo[0].name;
+						getHotelIDc = hotelInfo[0].hotel_id;
+					}
+
+				    $(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
+				    $(h4Dom).append(getHotelName);
+
+					for(var point=0;point<getKeywordList.length;point++) {
+						console.log('gdataa', data);
+						console.log('target', data[getKeywordList[point]]);
+						var cons = data[getKeywordList[point]].cons.length;
+						var pros = data[getKeywordList[point]].pros.length;	
+
+						var liDom = document.createElement('li');
+					    $(liDom).append(pros.toString()).append('/').append(cons.toString());
+
+					    $(ulDom).append(liDom);
+					}
+
+					$(sectionDom).append(h4Dom).append(ulDom);
+					$(pkdom).append(sectionDom);
+				});
+			});
+		}
+
+		$(pkoverall).append(pkinput).append(pkdom);
+		$('body').append(pkoverall);
+
+		// inputdom key press
+	    $('.inputdom').keypress(function (e) {
+		  if (e.which == 13) {
+		    var getKw = $(this).val();
+		    var addCateliDom = document.createElement('li');
+			
+			$(addCateliDom).append(getKw);	
+		    $('#catepk').find('ul').append(addCateliDom);
+
+		    for(var hotel=0;hotel<hotelIdList.length;hotel++) {
+			    lib.getHotelKeywordReviews(hotelIdList[hotel], getKw, function(data){
+			    	var gID = data.id,
+			    		cons = data[getKw].cons.length,
+						pros = data[getKw].pros.length;
+
+					var addliDom = document.createElement('li');
+
+					$(addliDom).append(pros.toString()).append('/').append(cons.toString());
+					
+					$('#' + gID).find('ul').append(addliDom);
+			    });
+			}
+
+		  }
+		});
+    }
+
+
+	var CONST_CONFIGS = {
+			getMaxComment: 50,
+	  		setCommentTrunc: 64
+		},
+		CONST_SELECTOR = {
+			getBookingBlur: '.booking-blur',
+	    	getBookingSel: '.sr_item',
+	    	getItemPhoto: '.sr_item_photo',
+	    	getItemPhotoTarID: '.targetPhoto',
+	    	getItemName: '.sr-hotel__name',
+	    	getItemImg: '.hotel_image',
+	    	getAddedBtn: '.addtoPKBtn'
+		},
+		CONST_STYLING = {
+			setBlurStyling: {
+				'-webkit-filter': 'blur(10px)',
+				'filter': 'blur(10px)'
+			},
+			cancelBlurStyling: {
+				'-webkit-filter': '',
+				'filter': ''
+			}
+		},
+		CONF_IMG = {
+			like: 'images/like.png'
+		},
+		CONF_TRANS = {
+			boxingNow: 'Boxing Now'
+		};
+	
+    var _getFECache = function(hotel_id){
+    	if(_store.cache[hotel_id]){
+            return _store.cache[hotel_id];
+        }
+        return null;
+    };
+    var _putFECache = function(hotel_id, data){
+        if(data) {
+            _store.cache[hotel_id] = data;
+        }
+    };
+
+	var _showComment = function(data) {
+		$(CONST_SELECTOR.getBookingBlur).text('');
+		var limit = (CONST_CONFIGS.getMaxComment > data.length) ? data.length : CONST_CONFIGS.getMaxComment;
+
+		for (var item=0;item<limit;item++) {
+			// create comment dom
+			var commentList = document.createElement('div'),
+				averageScore = document.createElement('span'),
+				getPros = data[item].pros || '',
+				getCons = data[item].cons || '',
+				commentCnt = '',
+				setCls = '';
+
+			if (getPros) {
+				commentCnt = getPros;
+				setCls = 'pros';
+			} else if (getCons) {
+				commentCnt = getCons;
+				setCls = 'cons';
+			}
+
+			if (commentCnt.length > CONST_CONFIGS.setCommentTrunc) {
+				commentCnt = data[item].pros.substring(0, CONST_CONFIGS.setCommentTrunc) + ' ...'; 
+			}
+
+			if (commentCnt) {
+				$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
+				$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
+				$(CONST_SELECTOR.getBookingBlur).append(commentList);
+			}
+		}
+	}
 
     var dom = document.createElement('div'),
     	hotelCartCnt = document.createElement('div'),
-    	hotelCartNow = document.createElement('div'),
-    	getBookingBlur = '.booking-blur',
-    	getBookingList = '.booking-list',
-    	getBookingSel = '.sr_item';
-    	getMaxComment = 50;
-  		setCommentTrunc = 64;
+    	hotelCartNow = document.createElement('div');
+
     var hotelID = '',
     	hotelName = '',
     	hotelImg = '';
 
 	// cart container
-
 	$(hotelCartCnt).addClass('hotelCartCnt');
-	$(hotelCartNow).addClass('hotelCartNow').text('PK NOW');
+	$(hotelCartNow).addClass('hotelCartNow').text(CONF_TRANS.boxingNow);
 
     $(dom).addClass('booking-blur');
 
     $(hotelCartCnt).append(hotelCartNow);
 	$("body").append(dom).append(hotelCartCnt);
-	$(getBookingBlur).hide(); 
+	$(CONST_SELECTOR.getBookingBlur).hide(); 
 
-	$(getBookingSel).mouseenter(function(){
-
+	$(CONST_SELECTOR.getBookingSel).mouseenter(function(){
 		// image blur 
-		$(this).find('.sr_item_photo').addClass('targetPhoto').css({
-			'-webkit-filter': 'blur(10px)',
-			'filter': 'blur(10px)'
-		});
+		$(this).find(CONST_SELECTOR.getItemPhoto).addClass('targetPhoto').css(CONST_STYLING.setBlurStyling);
 
 		// add button
 		var addtoPKBtn = document.createElement('div');
 
-		// hotel id
-		hotelID = $(this).find('.sr_item_photo').attr('id').replace('hotel_', '');
-		//console.log("hotelID", hotelID);
-
-		hotelName = $(this).find('.sr-hotel__name').text().trim();
-		hotelImg = $(this).find('.hotel_image').attr('src');
+		// get current hotelID, hotelName, hotelImg
+		hotelID = $(this).find(CONST_SELECTOR.getItemPhoto).attr('id').replace('hotel_', '');
+		hotelName = $(this).find(CONST_SELECTOR.getItemName).text().trim();
+		hotelImg = $(this).find(CONST_SELECTOR.getItemImg).attr('src');
 
 		$(addtoPKBtn).addClass('addtoPKBtn').attr('data-id', hotelID)
 											.attr('data-title', hotelName)
 											.attr('data-img', hotelImg)
-											.text('added to PK');
+											.text('+');
 		$(this).append(addtoPKBtn);
 
-		$('.addtoPKBtn').click(function(){
+		$(CONST_SELECTOR.getAddedBtn).click(function(){
 			var getClickDataID = $(this).attr('data-id'),
-				getClickDataTitle = $(this).attr('data-title');
-			var isExisted = false;
-			console.log("click on it");
+				getClickDataTitle = $(this).attr('data-title'),
+				isExisted = false;
 
 			$('.hotelCartItem').each(function() {
 				var curr = $(this);
-
 				if (getClickDataID === $(curr).attr('data-id')) {
 					isExisted = true;
 				}
-				//console.log('qqqq ===' + $(curr).attr('data-id'));
 			});
 
 			if (isExisted === false) {
 				var hotelCartItem = document.createElement('div'),
 					hotelCartText = document.createElement('span'),
-					hotelCartImg = document.createElement('img');
+					hotelCartImg = document.createElement('img'),
+					likeImg = chrome.extension.getURL(CONF_IMG.like);
 
-				var likeImg = chrome.extension.getURL("images/like.png");
 				$(hotelCartImg).addClass('hotelCartImg').attr('src', likeImg);
 				$(hotelCartText).addClass('hotelCartText')
 								.append(getClickDataTitle)
@@ -93,7 +275,6 @@ $(document).ready(function() {
 					console.log("added hotel id", getClickDataID);
 				});
 			}
-
 		});
 
 		// loading
@@ -111,212 +292,38 @@ $(document).ready(function() {
 		$(skThreeBounce).append(skBounce1).append(skBounce2).append(skBounce3);
 		$(loadingContainer).append(skThreeBounce);
 		// clean up content
-		$(getBookingBlur).text('').append(loadingContainer);
+		$(CONST_SELECTOR.getBookingBlur).text('').append(loadingContainer);
 
-    	// get hotel review
-		lib.getHotelReviews(hotelID, function(data){
-
-			$(getBookingBlur).text('');
-
-			if ((data.length === 1 && data[0].pros === '' && data[0].cons === '') || !data) {
-				var notFoundText = document.createElement('div');
-
-				$(notFoundText).addClass('notFoundText').text('Comment not Found')
-				$(getBookingBlur).append(notFoundText);
-			} else if (data) {
-				// console.log("data", data);
-				var limit = 10;
-				if (getMaxComment > data.length) {
-					limit = data.length;
-				} else {
-					limit = getMaxComment;
+		var getCache = _getFECache(hotelID);
+		if (getCache) {
+			_showComment(getCache);
+		} else {
+	    	// get hotel review
+			lib.getHotelReviews(hotelID, function(data){
+				if ((data.length === 1 && data[0].pros === '' && data[0].cons === '') || !data) {
+					// zrp
+					var notFoundText = document.createElement('div');
+					$(CONST_SELECTOR.getBookingBlur).text('');
+					$(notFoundText).addClass('notFoundText').text('Comment not Found')
+					$(CONST_SELECTOR.getBookingBlur).append(notFoundText);
+				} else if (data) {
+					_putFECache(hotelID, data);
+					_showComment(data);	
 				}
-
-				for (var item=0;item<limit;item++) {
-					// create comment dom
-					var commentList = document.createElement('div'),
-						averageScore = document.createElement('span'),
-						commentCnt = '';
-
-					var getPros = data[item].pros || '',
-						getCons = data[item].cons || '';
-						setCls = '';
-
-					//console.log("item", data[item]);
-					if (getPros) {
-						
-						var commentList = document.createElement('div');
-
-						if (getPros.length > setCommentTrunc) {
-							commentCnt = data[item].pros.substring(0, setCommentTrunc) + ' ...'; 
-						} else {
-							commentCnt = getPros;
-						}
-						setCls = 'pros';
-					} else if (getCons) {
-						var commentList = document.createElement('div');
-
-						if (getCons.length > setCommentTrunc) {
-							commentCnt = data[item].cons.substring(0, setCommentTrunc) + ' ...'; 
-						} else {
-							commentCnt = getCons;
-						}
-						setCls = 'cons';
-					}
-
-					if (commentCnt) {
-						$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
-						$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
-						$(getBookingBlur).append(commentList);
-					}
-				}
-			}
-		});
-
-		$(getBookingBlur).show();
-		
-
+			});
+		}
+		$(CONST_SELECTOR.getBookingBlur).show();
 	}).mouseleave(function(){
-		$(getBookingBlur).hide();
-
-		$('.targetPhoto').css({
-			'-webkit-filter': '',
-			'filter': ''
-		});
-		$('.addtoPKBtn').remove();
+		$(CONST_SELECTOR.getBookingBlur).hide();
+		$(CONST_SELECTOR.getItemPhotoTarID).css(CONST_STYLING.cancelBlurStyling);
+		$(CONST_SELECTOR.getAddedBtn).remove();
 	});
 
-    for (var i=0;i<comments.length;i++) {
-    	var commentList = document.createElement('div');
-    	$(commentList).addClass('booking-list').text(comments[i]);
-    	$(getBookingBlur).append(commentList);
-    }
+    // create dom
+    var dom = document.createElement("div");
+    $("body").append(dom);
 
-
-    // PK table
-    var pktableContainer = document.createElement("div");
-    $(pktableContainer).attr("id", "pktable-container");
-
-    
-    var kwColumnList = [],
-        kwList = lib.getComparisonKeywords();
-
-
-    var kwColumn = document.createElement("div");
-    $(kwColumn).addClass( "pktable-kw-column pktable-kw-column-0" );
-    
-
-    // kw column
-    var imgCell = document.createElement("div");
-    $(imgCell).addClass( "pktable-kw-cell pktable-kw-cell-0" );
-    $(imgCell).text("Hotels");
-    kwColumn.append(imgCell);
-
-    kwList.forEach(function(ele, ind){
-        var kwCell = document.createElement("div");
-        $(kwCell).addClass( "pktable-kw-cell " + "pktable-kw-cell-" + +(ind + 1) );
-        $(kwCell).text(ele);
-        kwColumn.append(kwCell);
-    });
-
-    var addBtnCell = document.createElement("div");
-    $(addBtnCell).addClass( "pktable-kw-cell pktable-kw-cell-last" );
-    var addBtn = "<input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i>";
-    $(addBtnCell).append(addBtn);
-    kwColumn.append(addBtnCell);
-    kwColumnList.push(kwColumn);
-
-
-    $("#booking-add-kw-button").click(function(){
-        addNewKw( $("#booking-input-kw").val() );
-    });
-    $("#booking-add-kw-button").hover(function(){
-        $(this).addClass("fa-lg");
-    }, function(){
-        $(this).removeClass("fa-lg");
-    });
-
-    $("#booking-input-kw").blur(function(){
-    });
-    
-    // set Hotel columns
-    // var hotelIdList = getFavoriteHotels() || ["725241", "270817", "334583", "1279339"];
-    var hotelIdList = ["725241", "270817", "334583", "1279339"];
-
-    hotelIdList.forEach(function(ele, ind, val) {
-        var kwColumn = document.createElement("div");
-        $(kwColumn).attr("id", ele);
-        $(kwColumn).attr("class", "pktable-kw-column pktable-kw-column" + +(ind + 1));
-
-
-        var imgCell = document.createElement("div");
-        $(imgCell).addClass( "pktable-kw-cell pktable-kw-cell-0" );
-        kwColumn.append(imgCell);
-
-        kwList.forEach(function(ele, ind){
-            var kwCell = document.createElement("div");
-            $(kwCell).addClass( "pktable-kw-cell " + "pktable-kw-cell-" + +(ind + 1) );
-            kwColumn.append(kwCell);
-        });
-
-
-        lib.getHotelInfo(ele, setHotelPhoto);
-        lib.getHotelKeywordReviews(ele, kwList, updateHotelTable);
-        kwColumnList.push(kwColumn);
-    });
-
-    kwColumnList.forEach(function(ele){
-        $(pktableContainer).append(ele);
-    });
-    $("body").append(pktableContainer); 
+    generatePK();
 
 });
 })();
-
-function setHotelTable(){
-
-}
-
-function updateHotelTable (result) {
-    setHotelKwScore(result.hotelId, result.data);
-    orderHotelColumns();
-}
-
-
-function orderHotelColumns () {
-
-}
-
-function setHotelKwScore (id, data) {
-    console.log('score');
-    console.log(data);
-    
-    
-    var hotelColumnList = [];
-
-    data.forEach( function(ele, ind) {
-
-        var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
-                        '<span class="thumbs-cnt">' + ele.pros.length + '</span>' +
-                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
-                        '<span class="thumbs-cnt">' + ele.cons.length + '</span>';
-        $("#" + id + " .pktable-kw-cell-" + +(ind + 1) ).append(thumbs);
-        
-    });
-
-    hotelColumn = document.createElement('div');
-
-    return;
-}
-
-function setHotelPhoto(data){
-    var id = data[0].hotel_id;
-    $("#" + data[0].hotel_id + " .pktable-kw-cell-0").append("<img src='" + data[0].photos[0].url_max300 + "' alt='' height='150' width='150'>");
-
-    // console.log(data);
-}
-
-function addNewKw (kw) {
-    // TODO
-    // console.log(kw);
-}
