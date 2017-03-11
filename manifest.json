@@ -8,7 +8,11 @@
       "48": "icons/icon48x48.png",
       "16": "icons/icon16x16.png"
   },
-  "permissions": ["storage" , "tabs" , "*://*.mail.yahoo.com/*" ],
+  "permissions": [
+    "storage", 
+    "tabs",
+    "https://distribution-xml.booking.com/json/*"
+  ],
   "background": {
     "scripts": [
       "scripts/jquery-2.0.0.min.js",
@@ -20,13 +24,13 @@
       "js": [
         "scripts/jquery-2.0.0.min.js",
         "scripts/jquery.min.map",
+        "scripts/lib.js",
         "scripts/contentscript.js"
       ],
       "css": [
         "styles/yhack.css"
       ],
       "matches": [
-        //"*://*.mail.yahoo.com/*"
         "*://www.booking.com/*"
       ]
    }],

@@ -11,7 +11,10 @@ $(document).ready(function() {
     // create dom
     var dom = document.createElement("div");
     $(dom).addClass("booking-blur").text('test');
-    $("body").append(dom); 
+    $("body").append(dom);
+
+    lib = new BDCLib();
+    lib.debug();
 });
 })();
 
