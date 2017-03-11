@@ -72,7 +72,10 @@ $(document).ready(function() {
 					console.log('getHotelInfo',hotelInfo);
 
 					var getHotelName = '',
+						getPhotoUrl = hotelInfo[0].photos[0].url_max300,
 						getHotelIDc = '';
+
+					console.log('getPhotoUrl', getPhotoUrl);
 
 					if (hotelInfo[0]) {
 						getHotelName = hotelInfo[0].name;
@@ -84,9 +87,9 @@ $(document).ready(function() {
 
 					for(var point=0;point<getKeywordList.length;point++) {
 						console.log('gdataa', data);
-						console.log('target', data[getKeywordList[point]]);
-						var cons = data[getKeywordList[point]].cons.length;
-						var pros = data[getKeywordList[point]].pros.length;	
+						console.log('target', data.data[getKeywordList[point]]);
+						var cons = data.data[getKeywordList[point]].cons.length;
+						var pros = data.data[getKeywordList[point]].pros.length;	
 
 						var liDom = document.createElement('li');
 					    $(liDom).append(pros.toString()).append('/').append(cons.toString());
@@ -115,11 +118,10 @@ $(document).ready(function() {
 		    for(var hotel=0;hotel<hotelIdList.length;hotel++) {
 			    lib.getHotelKeywordReviews(hotelIdList[hotel], getKw, function(data){
 			    	var gID = data.id,
-			    		cons = data[getKw].cons.length,
-						pros = data[getKw].pros.length;
+			    		cons = data.data[getKw].cons.length,
+						pros = data.data[getKw].pros.length;
 
 					var addliDom = document.createElement('li');
-
 					$(addliDom).append(pros.toString()).append('/').append(cons.toString());
 					
 					$('#' + gID).find('ul').append(addliDom);
