@@ -34,6 +34,7 @@ BDCLib.prototype.getHotelInfo = function(hotelId, cb){
 };
 
 BDCLib.prototype.getHoteReviews = function(hotelId, cb){
+    console.log('call getHoteReviews', hotelId);
     this.requestBookingDotCom('getBookingcomReviews',
         {
             hotel_ids: hotelId,
