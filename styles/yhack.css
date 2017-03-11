@@ -2,20 +2,21 @@
     hackday-basic-chrome-ext for hackday usage
 */
 .booking-blur {
+	background-image: url('http://cdn.paper4pc.com/images/blur-wallpaper-1.jpg');
     position: fixed;
     top: 0;
     left: 0;
-    width: 420px;
+    width: 430px;
     height: 100%;
     z-index: 100;
-    background-color: rgba(234, 236, 239, 0.75);
 }
 
 .booking-list {
+	margin-top: 12px;
 	padding: 2px 10px 2px 10px;
 	font-size: 18px;
-	background-color: #FFFFFF;
-	color: #000000;
+	background-color: rgba(255, 255, 255, 0.4);
+	color: #FFFFFF;
 
 	border: 1px solid #cccccc;
 
@@ -31,12 +32,48 @@
 	border-radius: 3px;
 }
 
-.booking-list.pros {
+.addtoPKBtn {
+	font-size: 18px;
+	padding: 12px 6px 12px 6px;
+	position: absolute;
+	background-color: #0898ff;
+	color: #FFFFFF;
+}
+
+.averageScore {
+	color: #FFFFFF;
+	padding: 2px 2px 2px 2px;
+	font-size: 11px;
+	margin-right: 12px;
+
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 	background-color: rgba(90, 163, 90, 0.8);
 }
 
-.booking-list.cons {
-	background-color: red;
+.averageScore.pros {
+	background-color: rgba(0, 255, 0, 0.6);
+}
+
+.averageScore.cons {
+	background-color: rgba(255, 0, 0, 0.6);
+}
+
+.hotelCartCnt {
+	background-image: url('http://cdn.paper4pc.com/images/blur-wallpaper-1.jpg');
+    color: #FFFFFF;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 150px;
+	min-height: 10px;
+}
+
+.hotelCartItem {
+	font-size: 12px;
+	padding: 6px 6px 6px 6px;
+	width: 120px;
 }
 
 .sk-three-bounce:before {
