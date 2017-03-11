@@ -1,4 +1,4 @@
-function BDCLib(){
+function BDCStorage() {
     var _store = {
         cache: {},
         favorite: {},
@@ -8,15 +8,50 @@ function BDCLib(){
             'bathroom': true
         }
     };
+    this.restoreFromLocalStorage = function(){
+        if(localStorage['BDCStorage']){
+            _store = JSON.parse(localStorage.getItem('BDCStorage'));
+        }
+    };
+    this.dumpToLocalStorage = function(){
+        localStorage.setItem('BDCStorage', JSON.stringify(_store));
+        console.log('set OK');
+    };
+    this.setValue = function(storeKey, key, value){
+        if(_store[storeKey]){
+            _store[storeKey][key] = value;
+        }
+        this.dumpToLocalStorage();
+    };
+    this.removeKey = function(storeKey, key){
+        if(_store[storeKey]){
+            delete _store[storeKey][key];
+        }
+        this.dumpToLocalStorage();
+    };
+    this.getValue = function(storeKey, key){
+        if(_store[storeKey] && _store[storeKey][key]){
+            return _store[storeKey][key];
+        }
+        return null;
+    };
+    this.getStore = function(storeKey){
+        return _store[storeKey];
+    };
+}
+function BDCLib(){
+    var _cache = {};
+    var _store = new BDCStorage();
+    _store.restoreFromLocalStorage();
     var _getCache = function(url){
-        if(_store.cache[url]){
-            return _store.cache[url];
+        if(_cache[url]){
+            return _cache[url];
         }
         return null;
     };
     var _putCache = function(url, content){
         if(content){
-            _store.cache[url] = content;
+            _cache[url] = content;
         }
     };
     var _debug = function(){
@@ -175,10 +210,10 @@ function BDCLib(){
         //
         
         // favorite hotel test
-        //exports.addFavoriteHotel('725241', function(){
-        //    _debug('favorite list:', exports.getFavoriteHotels());
-        //    exports.removeFavoriteHotel('725241');
-        //    _debug('favorite list:', exports.getFavoriteHotels());
+        //exports.addFavoriteHotel('270817', function(){
+            //_debug('favorite list:', exports.getFavoriteHotels());
+            //exports.removeFavoriteHotel('270817');
+            //_debug('favorite list:', exports.getFavoriteHotels());
         //});
 
         //exports.getHotelKeywordReviews('725241', 'breakfast', function(data){_debug('keyword review', data);});
@@ -202,7 +237,7 @@ function BDCLib(){
         //exports.getHotelKeywordReviews('1139273', 'breakfast', function(data){_debug('keyword review', data);});
     
         // keywords test    
-        //exports.addComparisonKeyword('breakfast');
+        //exports.addComparisonKeyword('test');
         //exports.addComparisonKeyword('kerker');
         //exports.addComparisonKeyword('sound');
         //exports.removeComparisonKeyword('kerker');
@@ -210,13 +245,13 @@ function BDCLib(){
     };
 
     exports.addFavoriteHotel = function(hotelId, done){
-        if(_store.favorite[hotelId]){
+        if(_store.getValue('favorite', hotelId)){
             _debug('warning: duplicate favorite hotel ID ' + hotelId);
             return false;
         }
-        _store.favorite[hotelId] = true;
+        _store.setValue('favorite', hotelId, true);
         exports.getHotelInfo(hotelId, function(data){
-            _store.favorite[hotelId] = data;
+            _store.setValue('favorite', hotelId, data);
             if(done){
                 done(data);
             }
@@ -225,38 +260,38 @@ function BDCLib(){
     };
     
     exports.removeFavoriteHotel = function(hotelId){
-        if(!_store.favorite[hotelId]){
+        if(!_store.getValue('favorite', hotelId)){
             _debug('warning: not found favorite hotel ID ' + hotelId);
             return false;
         }
-        delete _store.favorite[hotelId];
+        _store.removeKey('favorite', hotelId);
         return true;
     };
     
     exports.getFavoriteHotels = function(){
-        return _store.favorite;
+        return _store.getStore('favorite');
     };
     
     exports.addComparisonKeyword = function(keyword){
-        if(_store.cmpWords[keyword]){
+        if(_store.getValue('cmpWords', keyword)){
             _debug('warning: duplicate cmpWords ' + keyword);
             return false;
         }
-        _store.cmpWords[keyword] = true;
+        _store.setValue('cmpWords', keyword, true);
         return true;
     };
     
     exports.removeComparisonKeyword = function(keyword){
-        if(!_store.cmpWords[keyword]){
+        if(!_store.getValue('cmpWords', keyword)){
             _debug('warning: not found cmpWords ' + keyword);
             return false;
         }
-        delete _store.cmpWords[keyword];
+        _store.removeKey('cmpWords', keyword);
         return true;
     };
     
     exports.getComparisonKeywords = function(){
-        return Object.keys(_store.cmpWords);
+        return Object.keys(_store.getStore('cmpWords'));
     };
     
     return exports;
