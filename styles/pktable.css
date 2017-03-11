@@ -75,7 +75,7 @@
     line-height: 20px;
     margin: 0px 5px;
     padding: 0px 5px;
-    width: 105px;
+    width: 120px;
 }
 
 #booking-add-kw-button {
@@ -89,13 +89,14 @@
     border: 1px solid #424242;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
-    display: block;
+    display: inline-block;
     line-height: 30px;
     /*padding: 5px;*/
     vertical-align: middle;
 }
 
 .pktable-kw-column-0 {
+    text-align: center;
     width: 200px;
 }
 
@@ -105,8 +106,16 @@
 
 .pktable-kw-cell {
     border: 1px solid #424242;
-    line-height: 30px;
+    line-height: 40px;
+    padding: 5px;
+    vertical-align: middle;
 }
 
+.pktable-kw-cell-0 {
+    height: 200px;
+}
 
+.pktable-kw-cell-last {
+    text-align: left;
+}
 

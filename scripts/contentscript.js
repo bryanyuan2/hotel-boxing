@@ -6,7 +6,7 @@
 $(document).ready(function() {
 
 	lib = new BDCLib();
-    lib.debug();
+    // lib.debug();
 
     var comments = ['great room', 'this is a awesome trip', 'I think the room service is not very well'];
 
@@ -197,40 +197,40 @@ $(document).ready(function() {
     var pktableContainer = document.createElement("div");
     $(pktableContainer).attr("id", "pktable-container");
     
-    var pktable =   "<table class='booking-pktable'>" +
-                        "<tbody>" +
-                            "<tr>" +
-                                "<td>Hotel</td>" +
-                                "<td><img src='http://t-ec.bstatic.com/images/hotel/square200/392/39242578.jpg' alt=''></td>" +
-                                "<td><img src='http://s-ec.bstatic.com/images/hotel/square200/728/72839775.jpg' alt=''></td>" +
-                                "<td><img src='http://s-ec.bstatic.com/images/hotel/square200/360/36046638.jpg' alt=''></td>" +
-                            "</tr>" +
-                            "<tr>" +
-                                "<td>breakfast</td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                            "</tr>" +
-                            "<tr>" +
-                                "<td>parking</td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                            "</tr>" +
-                            "<tr>" +
-                                "<td>pool</td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                            "</tr>" +
-                            "<tr>" +
-                                "<td><input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i></td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                                "<td></td>" +
-                            "</tr>" +
-                        "</tbody>" +
-                    "</table>";
+    // var pktable =   "<table class='booking-pktable'>" +
+    //                     "<tbody>" +
+    //                         "<tr>" +
+    //                             "<td>Hotel</td>" +
+    //                             "<td><img src='http://t-ec.bstatic.com/images/hotel/square200/392/39242578.jpg' alt=''></td>" +
+    //                             "<td><img src='http://s-ec.bstatic.com/images/hotel/square200/728/72839775.jpg' alt=''></td>" +
+    //                             "<td><img src='http://s-ec.bstatic.com/images/hotel/square200/360/36046638.jpg' alt=''></td>" +
+    //                         "</tr>" +
+    //                         "<tr>" +
+    //                             "<td>breakfast</td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                         "</tr>" +
+    //                         "<tr>" +
+    //                             "<td>parking</td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                         "</tr>" +
+    //                         "<tr>" +
+    //                             "<td>pool</td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                         "</tr>" +
+    //                         "<tr>" +
+    //                             "<td><input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i></td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                             "<td></td>" +
+    //                         "</tr>" +
+    //                     "</tbody>" +
+    //                 "</table>";
 
     
     var kwColumnList = [],
@@ -240,9 +240,11 @@ $(document).ready(function() {
     var kwColumn = document.createElement("div");
     $(kwColumn).addClass( "pktable-kw-column pktable-kw-column-0" );
     
+
     // kw column
     var imgCell = document.createElement("div");
     $(imgCell).addClass( "pktable-kw-cell pktable-kw-cell-0" );
+    $(imgCell).text("Hotels");
     kwColumn.append(imgCell);
 
     kwList.forEach(function(ele, ind){
@@ -251,14 +253,17 @@ $(document).ready(function() {
         $(kwCell).text(ele);
         kwColumn.append(kwCell);
     });
+
     var addBtnCell = document.createElement("div");
-    $(addBtnCell).addClass( "pktable-kw-cell pktable-kw-cell-" + +(kwList.length + 1) );
-    var atnBtn = "<input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i>";
+    $(addBtnCell).addClass( "pktable-kw-cell pktable-kw-cell-last" );
+    var addBtn = "<input type='text' id='booking-input-kw' placeholder='Feature:'/><i id='booking-add-kw-button' class='fa fa-plus-square' aria-hidden='true'></i>";
+    $(addBtnCell).append(addBtn);
     kwColumn.append(addBtnCell);
     kwColumnList.push(kwColumn);
 
+
     $("#booking-add-kw-button").click(function(){
-        addNewFeature( $("#booking-input-kw").val() );
+        addNewKw( $("#booking-input-kw").val() );
     });
     $("#booking-add-kw-button").hover(function(){
         $(this).addClass("fa-lg");
@@ -269,12 +274,30 @@ $(document).ready(function() {
     $("#booking-input-kw").blur(function(){
     });
     
+    // set Hotel columns
     var hotelIdList = ["725241", "270817", "334583", "1279339"];
 
     hotelIdList.forEach(function(ele, ind, val) {
         var kwColumn = document.createElement("div");
-        $(kwColumn).attr("class", "pktable-kw-column" + +(ind + 1));
+        $(kwColumn).attr("id", ele);
+        $(kwColumn).attr("class", "pktable-kw-column pktable-kw-column" + +(ind + 1));
+
+
+        var imgCell = document.createElement("div");
+        $(imgCell).addClass( "pktable-kw-cell pktable-kw-cell-0" );
+        kwColumn.append(imgCell);
+
+        kwList.forEach(function(ele, ind){
+            var kwCell = document.createElement("div");
+            $(kwCell).addClass( "pktable-kw-cell " + "pktable-kw-cell-" + +(ind + 1) );
+            $(kwCell).text(ele);
+            kwColumn.append(kwCell);
+        });
+
+
+        lib.getHotelInfo(ele, setHotelPhoto);
         lib.getHotelKeywordReviews(ele, kwList, updateHotelTable);
+        kwColumnList.push(kwColumn);
     });
 
     kwColumnList.forEach(function(ele){
@@ -285,8 +308,12 @@ $(document).ready(function() {
 });
 })();
 
-function updateHotelTable (result) {
-    setHotelKwScore(result);
+function setHotelTable(){
+
+}
+
+function updateHotelTable (id, result) {
+    setHotelKwScore(id, result);
     orderHotelColumns();
 }
 
@@ -295,10 +322,17 @@ function orderHotelColumns () {
 
 }
 
-function setHotelKwScore (result) {
-    console.log(result);
+function setHotelKwScore (id, result) {
+    console.log('score');
+    console.log(id);
     
     var hotelColumnList = [];
+
+    // result.forEach( function(element, index) {
+        // $("#" + id + " .pktable-kw-cell-0")
+        // $("#" + id).children
+        
+    // });
 
     hotelColumn = document.createElement('div');
 
@@ -306,6 +340,15 @@ function setHotelKwScore (result) {
     return;
 }
 
+function setHotelPhoto(data){
+    var id = data[0].hotel_id;
+    $("#" + data[0].hotel_id + " .pktable-kw-cell-0").append("<img src='" + data[0].photos[0].url_max300 + "' alt='' height='150' width='150'>");
+
+    // console.log(data[0].photos[0].url_max300);
+    // console.log(data);
+}
+
 function addNewKw (kw) {
     // TODO
+    // console.log(kw);
 }
