@@ -162,6 +162,12 @@ display: inline-block;
 	height: 100%;
 }
 
+.inputdom {
+	width: 240px;
+	height: 36px;
+	size: 24px;
+}
+
 .pkdom {
 	
 }

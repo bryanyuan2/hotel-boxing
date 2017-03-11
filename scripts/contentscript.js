@@ -28,9 +28,11 @@ $(document).ready(function() {
 
     	// imput dom
     	var inputdom = document.createElement('input');
-    	
     	inputdom.setAttribute("type", "text");
     	inputdom.setAttribute("name", "find");
+    	inputdom.setAttribute("placeholder", "please input your keyword ...");
+
+    	$(inputdom).addClass('inputdom');
 
 	    $(pkinput).append(inputdom);
 
@@ -39,7 +41,7 @@ $(document).ready(function() {
 	    	h4Dom = document.createElement('h4'),
 	    	ulDom = document.createElement('ul');
 
-	    $(sectionDom).addClass('sectionDom').addClass('lift').addClass('plan-tier');
+	    $(sectionDom).attr('id', 'catepk').addClass('sectionDom').addClass('lift').addClass('plan-tier');
 	    $(h4Dom).append('ROUND');
 
 	    for (var index =0;index<getKeywordList.length;index++) {
@@ -69,12 +71,15 @@ $(document).ready(function() {
 			    lib.getHotelInfo(getHotelID, function(hotelInfo){
 					console.log('getHotelInfo',hotelInfo);
 
-					var getHotelName = '';
+					var getHotelName = '',
+						getHotelIDc = '';
+
 					if (hotelInfo[0]) {
 						getHotelName = hotelInfo[0].name;
+						getHotelIDc = hotelInfo[0].hotel_id;
 					}
 
-				    $(sectionDom).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
+				    $(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
 				    $(h4Dom).append(getHotelName);
 
 					for(var point=0;point<getKeywordList.length;point++) {
@@ -96,16 +101,33 @@ $(document).ready(function() {
 		$(pkoverall).append(pkinput).append(pkdom);
 		$('body').append(pkoverall);
 
-		/*
-    	console.log('getKeywordList', getKeywordList);
-    	hotelIdList.forEach(function(ele, ind, val) {
-			lib.getHotelInfo(ele, function(data){
-				console.log('getHotelInfo',data);
-			});
-						
-    	});
-    	*/
+		// inputdom key press
+	    $('.inputdom').keypress(function (e) {
+		  if (e.which == 13) {
+		    var getKw = $(this).val();
+		    var addCateliDom = document.createElement('li');
+			
+			$(addCateliDom).append(getKw);	
+		    $('#catepk').find('ul').append(addCateliDom);
+
+		    for(var hotel=0;hotel<hotelIdList.length;hotel++) {
+			    lib.getHotelKeywordReviews(hotelIdList[hotel], getKw, function(data){
+			    	var gID = data.id,
+			    		cons = data[getKw].cons.length;
+						pros = data[getKw].pros.length;
+
+					var addliDom = document.createElement('li');
+
+					$(addliDom).append(pros.toString()).append('/').append(cons.toString());
+					
+					$('#' + gID).find('ul').append(addliDom);
+			    });
+			}
+
+		  }
+		});
     }
+
 
 	var CONST_CONFIGS = {
 			getMaxComment: 50,
