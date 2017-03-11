@@ -12,6 +12,100 @@ $(document).ready(function() {
     var _store = {
         cache: {}
     };
+	var hotelIdList = ["725241", "270817", "334583", "1279339"];
+
+    var generatePK = function() {
+    	//var getKeywordList = lib.getComparisonKeywords();
+    	var getKeywordList = ['breakfirst', 'service', 'bed', 'gum'];
+
+    	// init pkinput, pkdom
+    	var pkinput = document.createElement('div');
+    	var pkoverall = document.createElement('div');
+    	var pkdom = document.createElement('div');
+	    $(pkdom).addClass('pkdom');
+	    $(pkinput).addClass('pkinput');
+	    $(pkoverall).addClass('pkoverall');
+
+    	// imput dom
+    	var inputdom = document.createElement('input');
+    	
+    	inputdom.setAttribute("type", "text");
+    	inputdom.setAttribute("name", "find");
+
+	    $(pkinput).append(inputdom);
+
+		// render standrad column
+		var sectionDom = document.createElement('section'),
+	    	h4Dom = document.createElement('h4'),
+	    	ulDom = document.createElement('ul');
+
+	    $(sectionDom).addClass('sectionDom').addClass('lift').addClass('plan-tier');
+	    $(h4Dom).append('ROUND');
+
+	    for (var index =0;index<getKeywordList.length;index++) {
+	    	var liDom = document.createElement('li');
+	    	liDom.append(getKeywordList[index]);
+	    	$(ulDom).append(liDom);
+	    }
+
+	    $(sectionDom).append(h4Dom).append(ulDom);
+		$(pkdom).append(sectionDom);
+
+		//
+
+		for(var hotel=0;hotel<hotelIdList.length;hotel++) {
+
+			var currHotel = hotelIdList[hotel];
+
+			lib.getHotelKeywordReviews(hotelIdList[hotel], getKeywordList, function(data){
+				console.log('== getHotelKeywordReviews', data);
+
+				var sectionDom = document.createElement('section'),
+			    	h4Dom = document.createElement('h4'),
+			    	ulDom = document.createElement('ul');
+
+			    var getHotelID = data['id'];
+
+			    lib.getHotelInfo(getHotelID, function(hotelInfo){
+					console.log('getHotelInfo',hotelInfo);
+
+					var getHotelName = '';
+					if (hotelInfo[0]) {
+						getHotelName = hotelInfo[0].name;
+					}
+
+				    $(sectionDom).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
+				    $(h4Dom).append(getHotelName);
+
+					for(var point=0;point<getKeywordList.length;point++) {
+						var cons = data[getKeywordList[point]].cons.length;
+							pros = data[getKeywordList[point]].pros.length;	
+
+						var liDom = document.createElement('li');
+					    $(liDom).append(pros.toString()).append('/').append(cons.toString());
+
+					    $(ulDom).append(liDom);
+					}
+
+					$(sectionDom).append(h4Dom).append(ulDom);
+					$(pkdom).append(sectionDom);
+				});
+			});
+		}
+
+		$(pkoverall).append(pkinput).append(pkdom);
+		$('body').append(pkoverall);
+
+		/*
+    	console.log('getKeywordList', getKeywordList);
+    	hotelIdList.forEach(function(ele, ind, val) {
+			lib.getHotelInfo(ele, function(data){
+				console.log('getHotelInfo',data);
+			});
+						
+    	});
+    	*/
+    }
 
 	var CONST_CONFIGS = {
 			getMaxComment: 50,
@@ -204,5 +298,11 @@ $(document).ready(function() {
     // create dom
     var dom = document.createElement("div");
     $("body").append(dom);
+
+    generatePK();
+
+
+
+
 });
 })();
