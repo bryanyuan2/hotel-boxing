@@ -97,7 +97,12 @@ function BDCLib(){
                 for(var field in fieldProfile){
                     if(review[field] && isMatchKeyword(review[field], query)){
                         matchedReviewCount++;
-                        result[field].push(review[field]);
+                        result[field].push({
+                            text: review[field],
+                            date: review.date,
+                            title: review.headline,
+                            author: review.author
+                        });
                         ageYears = (now.getTime() - (new Date(review.date)).getTime()) / (86400000 * 365);
                         result.score += fieldProfile[field] / ageYears;
                     }
@@ -132,6 +137,8 @@ function BDCLib(){
         //exports.getHotelKeywordReviews('270817', 'breakfast', function(data){_debug('keyword review', data);});
         //喜來登
         //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
+        // Canal House Suites at Sofitel Legend The Grand Amsterdam 
+        exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
     };
 
     exports.addFavoriteHotel = function(hotelId, done){
