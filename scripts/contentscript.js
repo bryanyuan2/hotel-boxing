@@ -14,7 +14,225 @@ $(document).ready(function() {
     };
 	//var hotelIdList = ["725241", "270817", "334583", "1279339"];
 
-    var generatePK = function(hotelIdList) {
+	var CONST_CONFIGS = {
+			getMaxComment: 50,
+	  		setCommentTrunc: 64
+		},
+		CONST_SELECTOR = {
+			getBookingBlur: '.booking-blur',
+	    	getBookingSel: '.sr_item',
+	    	getItemPhoto: '.sr_item_photo',
+	    	getItemPhotoTarID: '.targetPhoto',
+	    	getItemName: '.sr-hotel__name',
+	    	getItemImg: '.hotel_image',
+	    	getAddedBtn: '.addtoPKBtn'
+		},
+		CONST_STYLING = {
+			setBlurStyling: {
+				'-webkit-filter': 'blur(10px)',
+				'filter': 'blur(10px)'
+			},
+			cancelBlurStyling: {
+				'-webkit-filter': '',
+				'filter': ''
+			}
+		},
+		CONF_IMG = {
+			like: 'images/like.png'
+		},
+		CONF_TRANS = {
+			boxingNow: 'Boxing Now'
+		};
+	
+    var _getFECache = function(hotel_id){
+    	if(_store.cache[hotel_id]){
+            return _store.cache[hotel_id];
+        }
+        return null;
+    };
+    var _putFECache = function(hotel_id, data){
+        if(data) {
+            _store.cache[hotel_id] = data;
+        }
+    };
+
+	var _showComment = function(data) {
+		$(CONST_SELECTOR.getBookingBlur).text('');
+		var limit = (CONST_CONFIGS.getMaxComment > data.length) ? data.length : CONST_CONFIGS.getMaxComment;
+
+		for (var item=0;item<limit;item++) {
+			// create comment dom
+			var commentList = document.createElement('div'),
+				averageScore = document.createElement('span'),
+				getPros = data[item].pros || '',
+				getCons = data[item].cons || '',
+				commentCnt = '',
+				setCls = '';
+
+			if (getPros) {
+				commentCnt = getPros;
+				setCls = 'pros';
+			} else if (getCons) {
+				commentCnt = getCons;
+				setCls = 'cons';
+			}
+
+			if (commentCnt.length > CONST_CONFIGS.setCommentTrunc) {
+				commentCnt = data[item].pros.substring(0, CONST_CONFIGS.setCommentTrunc) + ' ...'; 
+			}
+
+			if (commentCnt) {
+				$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
+				$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
+				$(CONST_SELECTOR.getBookingBlur).append(commentList);
+			}
+		}
+	}
+
+	var _addedHotelsInBoxingList = function(title, hotel_id) {
+		var hotelCartItem = document.createElement('div'),
+			hotelCartText = document.createElement('span'),
+			hotelCartImg = document.createElement('img'),
+			likeImg = chrome.extension.getURL(CONF_IMG.like);
+
+		$(hotelCartImg).addClass('hotelCartImg').attr('src', likeImg);
+		$(hotelCartText).addClass('hotelCartText')
+						.append(title)
+
+		$(hotelCartItem).addClass('hotelCartItem')
+						.attr('data-id', hotel_id)
+						.append(hotelCartImg)				
+						.append(hotelCartText);
+		$(hotelCartCnt).append(hotelCartItem);
+	};
+
+    var dom = document.createElement('div'),
+    	hotelCartCnt = document.createElement('div'),
+    	hotelCartNow = document.createElement('div');
+
+    var hotelID = '',
+    	hotelName = '',
+    	hotelImg = '';
+
+	// cart container
+	$(hotelCartCnt).addClass('hotelCartCnt');
+	$(hotelCartNow).addClass('hotelCartNow').text(CONF_TRANS.boxingNow);
+
+	$(hotelCartNow).on('click', function(){
+		console.log('== calling generatePKBoxing');
+		var getFavHotels = lib.getFavoriteHotels(),
+			getFavHotelAry = [];
+
+		console.log('== getFavHotels', getFavHotels);
+		for (var id in getFavHotels) {
+			getFavHotelAry.push(id);
+		}
+
+		console.log('== getFavHotelAry', getFavHotelAry);
+    	generatePKBoxing(getFavHotelAry);
+	});
+
+	// now cart default hotels via API
+	var getFavoriteHotelsDefault = lib.getFavoriteHotels();
+
+	console.log('getFavoriteHotelsDefault', getFavoriteHotelsDefault);
+	for (var hotelsIndex in getFavoriteHotelsDefault) {
+		var hName = getFavoriteHotelsDefault[hotelsIndex][0].name;
+		_addedHotelsInBoxingList(hName, hotelsIndex);
+	}
+
+    $(dom).addClass('booking-blur');
+
+    $(hotelCartCnt).append(hotelCartNow);
+	$("body").append(dom).append(hotelCartCnt);
+	$(CONST_SELECTOR.getBookingBlur).hide(); 
+
+	$(CONST_SELECTOR.getBookingSel).mouseenter(function(){
+		// image blur 
+		$(this).find(CONST_SELECTOR.getItemPhoto).addClass('targetPhoto').css(CONST_STYLING.setBlurStyling);
+
+		// add button
+		var addtoPKBtn = document.createElement('div');
+
+		// get current hotelID, hotelName, hotelImg
+		hotelID = $(this).find(CONST_SELECTOR.getItemPhoto).attr('id').replace('hotel_', '');
+		hotelName = $(this).find(CONST_SELECTOR.getItemName).text().trim();
+		hotelImg = $(this).find(CONST_SELECTOR.getItemImg).attr('src');
+
+		$(addtoPKBtn).addClass('addtoPKBtn').attr('data-id', hotelID)
+											.attr('data-title', hotelName)
+											.attr('data-img', hotelImg)
+											.text('+');
+		$(this).append(addtoPKBtn);
+
+		$(CONST_SELECTOR.getAddedBtn).click(function(){
+			var getClickDataID = $(this).attr('data-id'),
+				getClickDataTitle = $(this).attr('data-title'),
+				isExisted = false;
+
+			$('.hotelCartItem').each(function() {
+				var curr = $(this);
+				if (getClickDataID === $(curr).attr('data-id')) {
+					isExisted = true;
+				}
+			});
+
+			if (isExisted === false) {
+				_addedHotelsInBoxingList(getClickDataTitle, getClickDataID);
+				// added addFavoriteHotel
+				lib.addFavoriteHotel(getClickDataID, function(done){
+					console.log("added hotel id", getClickDataID);
+				});
+			}
+		});
+
+		// loading
+		var loadingContainer = document.createElement('div'),
+			skThreeBounce = document.createElement('div'),
+			skBounce1 = document.createElement('div'),
+			skBounce2 = document.createElement('div'),
+			skBounce3 = document.createElement('div');
+		
+		$(skThreeBounce).addClass('sk-three-bounce');
+		$(skBounce1).addClass('sk-child').addClass('sk-bounce1');
+		$(skBounce2).addClass('sk-child').addClass('sk-bounce2');
+		$(skBounce3).addClass('sk-child').addClass('sk-bounce3');
+
+		$(skThreeBounce).append(skBounce1).append(skBounce2).append(skBounce3);
+		$(loadingContainer).append(skThreeBounce);
+		// clean up content
+		$(CONST_SELECTOR.getBookingBlur).text('').append(loadingContainer);
+
+		var getCache = _getFECache(hotelID);
+		if (getCache) {
+			_showComment(getCache);
+		} else {
+	    	// get hotel review
+			lib.getHotelReviews(hotelID, function(data){
+				if ((data.length === 1 && data[0].pros === '' && data[0].cons === '') || !data) {
+					// zrp
+					var notFoundText = document.createElement('div');
+					$(CONST_SELECTOR.getBookingBlur).text('');
+					$(notFoundText).addClass('notFoundText').text('Comment not Found')
+					$(CONST_SELECTOR.getBookingBlur).append(notFoundText);
+				} else if (data) {
+					_putFECache(hotelID, data);
+					_showComment(data);	
+				}
+			});
+		}
+		$(CONST_SELECTOR.getBookingBlur).show();
+	}).mouseleave(function(){
+		$(CONST_SELECTOR.getBookingBlur).hide();
+		$(CONST_SELECTOR.getItemPhotoTarID).css(CONST_STYLING.cancelBlurStyling);
+		$(CONST_SELECTOR.getAddedBtn).remove();
+	});
+
+    // create dom
+    var dom = document.createElement("div");
+    $("body").append(dom);
+
+    var generatePKBoxing = function(hotelIdList) {
     	//var getKeywordList = lib.getComparisonKeywords();
     	var getKeywordList = ['breakfirst', 'service', 'bed', 'gum'];
 
@@ -144,210 +362,5 @@ $(document).ready(function() {
     }
 
 
-	var CONST_CONFIGS = {
-			getMaxComment: 50,
-	  		setCommentTrunc: 64
-		},
-		CONST_SELECTOR = {
-			getBookingBlur: '.booking-blur',
-	    	getBookingSel: '.sr_item',
-	    	getItemPhoto: '.sr_item_photo',
-	    	getItemPhotoTarID: '.targetPhoto',
-	    	getItemName: '.sr-hotel__name',
-	    	getItemImg: '.hotel_image',
-	    	getAddedBtn: '.addtoPKBtn'
-		},
-		CONST_STYLING = {
-			setBlurStyling: {
-				'-webkit-filter': 'blur(10px)',
-				'filter': 'blur(10px)'
-			},
-			cancelBlurStyling: {
-				'-webkit-filter': '',
-				'filter': ''
-			}
-		},
-		CONF_IMG = {
-			like: 'images/like.png'
-		},
-		CONF_TRANS = {
-			boxingNow: 'Boxing Now'
-		};
-	
-    var _getFECache = function(hotel_id){
-    	if(_store.cache[hotel_id]){
-            return _store.cache[hotel_id];
-        }
-        return null;
-    };
-    var _putFECache = function(hotel_id, data){
-        if(data) {
-            _store.cache[hotel_id] = data;
-        }
-    };
-
-	var _showComment = function(data) {
-		$(CONST_SELECTOR.getBookingBlur).text('');
-		var limit = (CONST_CONFIGS.getMaxComment > data.length) ? data.length : CONST_CONFIGS.getMaxComment;
-
-		for (var item=0;item<limit;item++) {
-			// create comment dom
-			var commentList = document.createElement('div'),
-				averageScore = document.createElement('span'),
-				getPros = data[item].pros || '',
-				getCons = data[item].cons || '',
-				commentCnt = '',
-				setCls = '';
-
-			if (getPros) {
-				commentCnt = getPros;
-				setCls = 'pros';
-			} else if (getCons) {
-				commentCnt = getCons;
-				setCls = 'cons';
-			}
-
-			if (commentCnt.length > CONST_CONFIGS.setCommentTrunc) {
-				commentCnt = data[item].pros.substring(0, CONST_CONFIGS.setCommentTrunc) + ' ...'; 
-			}
-
-			if (commentCnt) {
-				$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
-				$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
-				$(CONST_SELECTOR.getBookingBlur).append(commentList);
-			}
-		}
-	}
-
-    var dom = document.createElement('div'),
-    	hotelCartCnt = document.createElement('div'),
-    	hotelCartNow = document.createElement('div');
-
-    var hotelID = '',
-    	hotelName = '',
-    	hotelImg = '';
-
-	// cart container
-	$(hotelCartCnt).addClass('hotelCartCnt');
-	$(hotelCartNow).addClass('hotelCartNow').text(CONF_TRANS.boxingNow);
-
-	$(hotelCartNow).on('click', function(){
-		console.log('== calling generatePK');
-		var getFavHotels = lib.getFavoriteHotels(),
-			getFavHotelAry = [];
-
-		console.log('== getFavHotels', getFavHotels);
-		for (var id in getFavHotels) {
-			getFavHotelAry.push(id);
-		}
-
-		console.log('== getFavHotelAry', getFavHotelAry);
-    	generatePK(getFavHotelAry);
-	});
-
-    $(dom).addClass('booking-blur');
-
-    $(hotelCartCnt).append(hotelCartNow);
-	$("body").append(dom).append(hotelCartCnt);
-	$(CONST_SELECTOR.getBookingBlur).hide(); 
-
-	$(CONST_SELECTOR.getBookingSel).mouseenter(function(){
-		// image blur 
-		$(this).find(CONST_SELECTOR.getItemPhoto).addClass('targetPhoto').css(CONST_STYLING.setBlurStyling);
-
-		// add button
-		var addtoPKBtn = document.createElement('div');
-
-		// get current hotelID, hotelName, hotelImg
-		hotelID = $(this).find(CONST_SELECTOR.getItemPhoto).attr('id').replace('hotel_', '');
-		hotelName = $(this).find(CONST_SELECTOR.getItemName).text().trim();
-		hotelImg = $(this).find(CONST_SELECTOR.getItemImg).attr('src');
-
-		$(addtoPKBtn).addClass('addtoPKBtn').attr('data-id', hotelID)
-											.attr('data-title', hotelName)
-											.attr('data-img', hotelImg)
-											.text('+');
-		$(this).append(addtoPKBtn);
-
-		$(CONST_SELECTOR.getAddedBtn).click(function(){
-			var getClickDataID = $(this).attr('data-id'),
-				getClickDataTitle = $(this).attr('data-title'),
-				isExisted = false;
-
-			$('.hotelCartItem').each(function() {
-				var curr = $(this);
-				if (getClickDataID === $(curr).attr('data-id')) {
-					isExisted = true;
-				}
-			});
-
-			if (isExisted === false) {
-				var hotelCartItem = document.createElement('div'),
-					hotelCartText = document.createElement('span'),
-					hotelCartImg = document.createElement('img'),
-					likeImg = chrome.extension.getURL(CONF_IMG.like);
-
-				$(hotelCartImg).addClass('hotelCartImg').attr('src', likeImg);
-				$(hotelCartText).addClass('hotelCartText')
-								.append(getClickDataTitle)
-
-				$(hotelCartItem).addClass('hotelCartItem')
-								.attr('data-id', getClickDataID)
-								.append(hotelCartImg)				
-								.append(hotelCartText);
-				$(hotelCartCnt).append(hotelCartItem);
-
-				// added addFavoriteHotel
-				lib.addFavoriteHotel(getClickDataID, function(done){
-					console.log("added hotel id", getClickDataID);
-				});
-			}
-		});
-
-		// loading
-		var loadingContainer = document.createElement('div'),
-			skThreeBounce = document.createElement('div'),
-			skBounce1 = document.createElement('div'),
-			skBounce2 = document.createElement('div'),
-			skBounce3 = document.createElement('div');
-		
-		$(skThreeBounce).addClass('sk-three-bounce');
-		$(skBounce1).addClass('sk-child').addClass('sk-bounce1');
-		$(skBounce2).addClass('sk-child').addClass('sk-bounce2');
-		$(skBounce3).addClass('sk-child').addClass('sk-bounce3');
-
-		$(skThreeBounce).append(skBounce1).append(skBounce2).append(skBounce3);
-		$(loadingContainer).append(skThreeBounce);
-		// clean up content
-		$(CONST_SELECTOR.getBookingBlur).text('').append(loadingContainer);
-
-		var getCache = _getFECache(hotelID);
-		if (getCache) {
-			_showComment(getCache);
-		} else {
-	    	// get hotel review
-			lib.getHotelReviews(hotelID, function(data){
-				if ((data.length === 1 && data[0].pros === '' && data[0].cons === '') || !data) {
-					// zrp
-					var notFoundText = document.createElement('div');
-					$(CONST_SELECTOR.getBookingBlur).text('');
-					$(notFoundText).addClass('notFoundText').text('Comment not Found')
-					$(CONST_SELECTOR.getBookingBlur).append(notFoundText);
-				} else if (data) {
-					_putFECache(hotelID, data);
-					_showComment(data);	
-				}
-			});
-		}
-		$(CONST_SELECTOR.getBookingBlur).show();
-	}).mouseleave(function(){
-		$(CONST_SELECTOR.getBookingBlur).hide();
-		$(CONST_SELECTOR.getItemPhotoTarID).css(CONST_STYLING.cancelBlurStyling);
-		$(CONST_SELECTOR.getAddedBtn).remove();
-	});
-
-    // create dom
-    var dom = document.createElement("div");
-    $("body").append(dom);
 });
 })();
