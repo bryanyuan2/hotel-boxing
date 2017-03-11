@@ -138,7 +138,9 @@ function BDCLib(){
         //喜來登
         //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
         // Canal House Suites at Sofitel Legend The Grand Amsterdam 
-        exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
+        //exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
+        // Crane Hotel Faralda
+        //exports.getHotelKeywordReviews('1139273', 'breakfast', function(data){_debug('keyword review', data);});
     };
 
     exports.addFavoriteHotel = function(hotelId, done){
