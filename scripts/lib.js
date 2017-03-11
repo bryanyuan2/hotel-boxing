@@ -85,7 +85,10 @@ function BDCLib(){
 
     exports.getHotelKeywordReviews = function(hotelId, queryArray, cb){
         exports.getHotelReviews(hotelId, function(reviews){
-            var results = {};
+            var results = {
+                hotelId: hotelId,
+                data: []
+            };
             var getKeywordReview = function(query){
                 var result = {
                     score: 0,
@@ -98,12 +101,20 @@ function BDCLib(){
                 };
                 var isMatchKeyword = function(text, query){
                     // simple version
-                    var re = new RegExp(query, 'i');
-                    return !!text.match(re);
+                    //var re = new RegExp(query, 'i');
+                    //return !!text.match(re);
                     
                     // apply Porter stemming algorithm
-                    //var textTokens = text.
-                    //TODO
+                    var textTokens = text.split(/[^\w]/).filter(function(s){return s;}).map(function(s){return stemmer(s);});
+                    var queryTokens = query.split(/[^\w]/).filter(function(s){return s;}).map(function(s){return stemmer(s);});
+                    for(var i = 0; i < textTokens.length; i++){
+                        for(var j = 0; j < queryTokens.length; j++){
+                            if(textTokens[i] === queryTokens[j]){
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
                 };
                 var review;
                 var ageYears;
@@ -138,15 +149,18 @@ function BDCLib(){
             if(typeof queryArray === 'string'){
                 queryArray = [queryArray];
             }
+            var review;
             for(var i = 0; i < queryArray.length; i++){
-                results[queryArray[i]] = getKeywordReview(queryArray[i]);
+                review = getKeywordReview(queryArray[i]);
+                review.query = queryArray[i];
+                results.data.push(review);
             }
             cb(results);
         });
     };
     
     exports.debug = function(){
-        exports.getHotelInfo('725241', function(data){_debug('get info', data)});
+        //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
         //exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
 
         // cache test
