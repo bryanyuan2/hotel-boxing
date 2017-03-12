@@ -350,13 +350,13 @@ $(document).ready(function() {
 				$('#' + gID).find('ul').append(addliDom);
 		    });
 		}
+
+        lib.addComparisonKeyword(getKw);
 	  }
 	});
 
     var generatePKBoxing = function(hotelIdList) {
-    	//var getKeywordList = lib.getComparisonKeywords();
-    	$('.cont').remove();
-    	$('.contRound').remove();
+    	getKeywordList = lib.getComparisonKeywords();
     	$(pkoverall).show();
         
 
