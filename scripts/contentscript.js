@@ -482,7 +482,9 @@ $(document).ready(function() {
                 // giveMedal(winHotels, getKeywordList);
                 // console.log("!@", hotel)
                 // console.log(hotelIdList.length)
-                if (hotel == +(hotelIdList.length-1)) {
+                // if (hotel == +(hotelIdList.length-1)) {
+                iteCount++;
+                if (iteCount == +(hotelIdList.length)) {
                     console.log(winHotels);
                     getKeywordList.forEach( function(ele, ind) {
 
@@ -500,7 +502,7 @@ $(document).ready(function() {
                     });
                 }
                 
-                // iteCount++;
+
             });
         });
     }
