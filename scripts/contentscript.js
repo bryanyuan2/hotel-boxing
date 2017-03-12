@@ -361,13 +361,15 @@ $(document).ready(function() {
                 console.log('add key');
                 console.log(winHotels);
 
+
+
 				var addliDom = document.createElement('li');
                 $(addliDom).addClass(getKw);
 
-				var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+				var thumbs = '<span class="thumbs-span"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
                                     '<span class="thumbs-cnt">' + pros + '</span>' +
                                     '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
-                                    '<span class="thumbs-cnt">' + cons + '</span>';
+                                    '<span class="thumbs-cnt">' + cons + '</span></span>';
 
                 $(addliDom).append(thumbs);
 				$('#' + gID).find('ul').append(addliDom);

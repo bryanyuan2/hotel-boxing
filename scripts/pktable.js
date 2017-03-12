@@ -24,9 +24,9 @@ function commentPopupInit(){
 
 function setCommentPopup(obj, type, getX, getY){
     // var type = "pros"; // "pros" or "cons"
-
+    console.log('obj', obj)
     var id = obj.closest("section").attr("id"),
-        kw = [ obj.parent().attr("class") ],
+        kw = [ obj.parent().parent().attr("class") ],
         hasContent = false;
 
     $(".popup-contanier ul").empty();
