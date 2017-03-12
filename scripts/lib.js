@@ -127,16 +127,24 @@ function BDCLib(){
                 var item;
                 var highlight = function(text, keyword){
                     var re = new RegExp('(' + keyword + ')', 'g');
-                    return text.replace(re, '<b>$1</b>');
+                    var match = text.match(re);
+                    return {
+                            text: text.replace(re, '<b>$1</b>'),
+                            count: match ? match.length : 0
+                        };
                 };
                 var text;
+                var matchRes;
                 for(var i = 0; i < data.length; i++){
                     item = data[i];
                     ['pros','cons'].forEach(function(type, idx){
                         if(item[type]){
                             text = item[type];
+                            item[type + '_hlc'] = 0;
                             exports.getComparisonKeywords().forEach(function(keyword){
-                                text = highlight(text, keyword);
+                                matchRes = highlight(text, keyword);
+                                text = matchRes.text;
+                                item[type + '_hlc'] += matchRes.count;
                             });
                             item[type + '_hl'] = text;
                         }

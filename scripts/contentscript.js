@@ -60,29 +60,38 @@ $(document).ready(function() {
 		$(CONST_SELECTOR.getBookingBlur).text('');
 		var limit = (CONST_CONFIGS.getMaxComment > data.length) ? data.length : CONST_CONFIGS.getMaxComment;
 
+        var displayData = [];
+        var commentCnt;
+        var ageMonth;
+        var nowDate = new Date();
 		for (var item=0;item<limit;item++) {
-			// create comment dom
-			var commentList = document.createElement('div'),
-				averageScore = document.createElement('span'),
-				getPros = data[item].pros_hl || '',
-				getCons = data[item].cons_hl || '',
-				commentCnt = '',
-				setCls = '';
+            ['pros','cons'].forEach(function(type, idx){
+                commentCnt = data[item][type + '_hl'] || '';
+                ageMonth = (nowDate.getTime() - (new Date(data[item]['date'])).getTime()) / (1000 * 86400 * 30);
+                ageMonth = Math.min(36, ageMonth);
 
-			if (getPros) {
-				commentCnt = getPros;
-				setCls = 'pros';
-			} else if (getCons) {
-				commentCnt = getCons;
-				setCls = 'cons';
-			}
-
-			if (commentCnt) {
-				$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
-				$(commentList).addClass('booking-list').append(averageScore).append('<div class="text">' + commentCnt + '</div>');
-				$(CONST_SELECTOR.getBookingBlur).append(commentList);
-			}
+			    if (commentCnt) {
+                    displayData.push({
+                            text: commentCnt,
+                            cls: type,
+                            ascore: data[item].average_score,
+                            score: (data[item][type + '_hlc'] || 0) * 10000 + (36 - ageMonth)
+                        });
+                }
+            });
 		}
+        displayData.sort(function(a,b){return b['score'] - a['score'];});
+        var data;
+        var commentList;
+        var averageScore;
+        for(var i = 0; i < displayData.length; i++){
+            commentList = document.createElement('div');
+            averageScore = document.createElement('span');
+            data = displayData[i];
+            $(averageScore).addClass('averageScore').addClass(data.cls).text(data.ascore);
+            $(commentList).addClass('booking-list').append(averageScore).append('<div class="text">' + data.text + '</div>');
+            $(CONST_SELECTOR.getBookingBlur).append(commentList);
+        }
 	}
 
 	var _addedHotelsInBoxingList = function(title, hotel_id) {
