@@ -123,7 +123,35 @@ function BDCLib(){
             {
                 hotel_ids: hotelId,
                 show_review_score_word: '1'
-            }, cb);
+            }, function(data){
+                var item;
+                var highlight = function(text, keyword){
+                    var re = new RegExp('(' + keyword + ')', 'g');
+                    var match = text.match(re);
+                    return {
+                            text: text.replace(re, '<b>$1</b>'),
+                            count: match ? match.length : 0
+                        };
+                };
+                var text;
+                var matchRes;
+                for(var i = 0; i < data.length; i++){
+                    item = data[i];
+                    ['pros','cons'].forEach(function(type, idx){
+                        if(item[type]){
+                            text = item[type];
+                            item[type + '_hlc'] = 0;
+                            exports.getComparisonKeywords().forEach(function(keyword){
+                                matchRes = highlight(text, keyword);
+                                text = matchRes.text;
+                                item[type + '_hlc'] += matchRes.count;
+                            });
+                            item[type + '_hl'] = text;
+                        }
+                    });
+                }
+                cb(data);
+            });
     };
 
 
@@ -212,7 +240,7 @@ function BDCLib(){
     
     exports.debug = function(){
         //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
-        //exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
+        exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
 
         // cache test
         //setTimeout(function(){
@@ -237,7 +265,7 @@ function BDCLib(){
         //exports.getHotelKeywordReviews('334583', ['breakfast', 'dinner', 'bed'], function(data){_debug('keyword review', data);});
         //
         // Burj Al Arab Jumeirah（阿拉伯塔朱美拉酒店）
-        exports.getHotelKeywordReviews('73052', ['breakfast', 'dinner', 'bed', 'parking', 'staff', 'restaurants', 'location', 'facilities', 'waiting', 'spa', 'swimming', 'cost', 'bathroom', 'wi-fi', 'coffee', 'atmosphere', 'air-conditioning'], function(data){_debug('keyword review', data);});
+        //exports.getHotelKeywordReviews('73052', ['breakfast', 'dinner', 'bed', 'parking', 'staff', 'restaurants', 'location', 'facilities', 'waiting', 'spa', 'swimming', 'cost', 'bathroom', 'wi-fi', 'coffee', 'atmosphere', 'air-conditioning'], function(data){_debug('keyword review', data);});
 
         // stemmer 
         // Porter stemming algorithm. https://www.npmjs.com/package/stemmer

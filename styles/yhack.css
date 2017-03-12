@@ -35,6 +35,10 @@
     overflow: hidden;
 }
 
+.booking-list .text b {
+    background-color: yellow;
+}
+
 .averageScore {
 	color: #FFFFFF;
 	padding: 2px;
@@ -190,7 +194,7 @@ display: inline-block;
 }
 
 .pkdom .plan-tier.cont {
-	width: 300px;
+	width: 180px;
 }
 
 .pkdom .plan-tier h4 {
