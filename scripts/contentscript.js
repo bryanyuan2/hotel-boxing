@@ -285,7 +285,8 @@ $(document).ready(function() {
 
     // close btn
     var clsoedom = document.createElement('div');
-    $(clsoedom).addClass('closebtn').append('X');
+    $(clsoedom).addClass('closebtn').append('<i class="fa fa-times  fa-lg" aria-hidden="true"></i>');
+
     $(pkoverall).append(clsoedom);
     $(clsoedom).on('click',function(){
     	$('.pkoverall').hide();
