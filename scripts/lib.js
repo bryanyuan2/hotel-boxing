@@ -29,6 +29,10 @@ function BDCStorage() {
         }
         this.dumpToLocalStorage();
     };
+    this.clear = function(storeKey){
+        _store[storeKey] = {};
+        this.dumpToLocalStorage();
+    };
     this.getValue = function(storeKey, key){
         if(_store[storeKey] && _store[storeKey][key]){
             return _store[storeKey][key];
@@ -273,6 +277,11 @@ function BDCLib(){
             return false;
         }
         _store.removeKey('favorite', hotelId);
+        return true;
+    };
+    
+    exports.clearAllFavoriteHotels = function(){
+        _store.clear('favorite');
         return true;
     };
     
