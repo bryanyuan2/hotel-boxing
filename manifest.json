@@ -24,6 +24,7 @@
         "scripts/jquery-2.0.0.min.js",
         "scripts/lib.js",
         "scripts/lib.stemmer.js",
+        "scripts/pktable.js",
         "scripts/contentscript.js"
       ],
       "css": [
@@ -44,6 +45,7 @@
       "styles/*",
       "*.ttf",
       "*.svg",
+      "view/*",
       "images/medal.png",
       "images/like.png"
   ]

@@ -270,7 +270,7 @@ $(document).ready(function() {
     	var inputdom = document.createElement('input');
     	inputdom.setAttribute("type", "text");
     	inputdom.setAttribute("name", "find");
-    	inputdom.setAttribute("placeholder", "please input your keyword ...");
+    	inputdom.setAttribute("placeholder", "please input keyword for comment ...");
 
     	$(inputdom).addClass('inputdom');
 
@@ -378,8 +378,10 @@ $(document).ready(function() {
             console.log('popup');
         });
 
+        setCommentPopup(lib);
+
 		// inputdom key press
-	    $('.inputdom').keypress(function (e) {
+	    $('.inputdom').on('keypress', function (e) {
 		  if (e.which == 13) {
 		    var getKw = $(this).val();
 		    var addCateliDom = document.createElement('li');
@@ -389,6 +391,7 @@ $(document).ready(function() {
 
 		    for(var hotel=0;hotel<hotelIdList.length;hotel++) {
 			    lib.getHotelKeywordReviews(hotelIdList[hotel], getKw, function(data){
+			    	console.log('input getHotelKeywordReviews', data);
 			    	var gID = data.id,
 			    		cons = data.data[getKw].cons.length,
 						pros = data.data[getKw].pros.length;
