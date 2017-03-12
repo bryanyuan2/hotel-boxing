@@ -344,6 +344,12 @@ $(document).ready(function() {
 		$(pkoverall).append(pkinput).append(pkdom);
 		$('body').append(pkoverall);
 
+        commentPopupInit();
+        // hover show popup
+        $( ".sectionDom ul" ).on( "click", "li", function() {
+            console.log('popup');
+        });
+
 		// inputdom key press
 	    $('.inputdom').keypress(function (e) {
 		  if (e.which == 13) {
@@ -360,8 +366,13 @@ $(document).ready(function() {
 						pros = data.data[getKw].pros.length;
 
 					var addliDom = document.createElement('li');
-					$(addliDom).append(pros.toString()).append('/').append(cons.toString());
-					
+					var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + pros + '</span>' +
+                                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + cons + '</span>';
+
+                    $(addliDom).append(thumbs);
+
 					$('#' + gID).find('ul').append(addliDom);
 			    });
 			}
