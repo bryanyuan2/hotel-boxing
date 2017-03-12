@@ -251,9 +251,12 @@ $(document).ready(function() {
     $("body").append(dom);
 
 
-    // generate PK default
-    var getKeywordList = ['breakfirst', 'service', 'bed', 'gum'];
-	// init pkinput, pkdom
+    //
+    // === generate PK default ===
+    //
+    var getKeywordList = lib.getComparisonKeywords() || ['breakfast', 'parking', 'bathroom'];
+
+    // init pkinput, pkdom
 	var pkinput = document.createElement('div');
 	var pkoverall = document.createElement('div');
 	var pkdom = document.createElement('div');
@@ -348,7 +351,7 @@ $(document).ready(function() {
 
 		// render all hotels
 		for(var hotel=0;hotel<hotelIdList.length;hotel++) {
-			var currHotel = hotelIdList[hotel];hotelIdList
+			var currHotel = hotelIdList[hotel];
 
 			lib.getHotelKeywordReviews(hotelIdList[hotel], getKeywordList, function(data){
 				//console.log('== getHotelKeywordReviews', data);
