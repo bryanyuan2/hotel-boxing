@@ -343,6 +343,7 @@ $(document).ready(function() {
 						var pros = data.data[getKeywordList[point]].pros.length;	
 
 						var liDom = document.createElement('li');
+                        $(liDom).addClass(data.data[getKeywordList[point]].query);
 
                         var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
                                         '<span class="thumbs-cnt">' + pros + '</span>' +
@@ -364,11 +365,42 @@ $(document).ready(function() {
 
         commentPopupInit();
         // hover show popup
+        // $(".pkoverall").on("click", "[class^='fa-thumbs-']", function(){
+        $(".pkoverall").on("click", ".fa-thumbs-up", function(){
+            setCommentPopup($(this), "pros");
+        });
+
+        $(".pkoverall").on("click", ".fa-thumbs-down", function(){
+            setCommentPopup($(this), "cons");
+        });
+
+        $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(){
+            $(".popup-contanier").show();
+            setCommentPopup($(this), "pros");
+        });
+        $(".pkoverall").on("mouseleave", ".fa-thumbs-up", function(){
+            $(".popup-contanier").hide();
+        });
+        
+        $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(){
+            $(".popup-contanier").show();
+            setCommentPopup($(this), "cons");
+        });
+        $(".pkoverall").on("mouseleave", ".fa-thumbs-down", function(){
+            $(".popup-contanier").hide();
+        });
+
+
+        // $(".pkoverall .fa").hover(function(){
+        //     $(this).addClass("fa-lg");
+        // }, function(){
+        //     $(this).removeClass("fa-lg");
+        // });
+
         $( ".sectionDom ul" ).on( "click", "li", function() {
             console.log('popup');
         });
 
-        setCommentPopup(lib);
 
 		// inputdom key press
 	    $('.inputdom').on('keypress', function (e) {
@@ -393,6 +425,7 @@ $(document).ready(function() {
                                         '<span class="thumbs-cnt">' + cons + '</span>';
 
                     $(addliDom).append(thumbs);
+                    $(addliDom).addClass(getKw);
 
 					$('#' + gID).find('ul').append(addliDom);
 			    });
