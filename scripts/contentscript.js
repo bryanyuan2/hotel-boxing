@@ -356,6 +356,8 @@ $(document).ready(function() {
             console.log('popup');
         });
 
+        setCommentPopup(lib);
+
 		// inputdom key press
 	    $('.inputdom').keypress(function (e) {
 		  if (e.which == 13) {
