@@ -8,13 +8,9 @@ var TEMPLATE = {
 }
 
 function generatePkTable(){
-    
     $.get(chrome.extension.getURL('view/pktable.html'), function(data) {
-
         // $($.parseHTML(data)).appendTo('body');
-
     });
-
 }
 
 function commentPopupInit(){
@@ -36,11 +32,14 @@ function setCommentPopup(obj, type, getX, getY){
     $(".popup-contanier ul").empty();
     lib.getHotelKeywordReviews(id, kw, function(data){
         var comments = data.data[kw][type];
-        comments.forEach( function(ele, ind) {
+        comments.forEach( function(ele, index) {
             hasContent = true;
-            if (ind > 5) return;
+            if (index > 5) {
+                return;
+            }
             var tmpcn = TEMPLATE.CommentLi.clone(true);
             var comment = ele.text;
+            
             tmpcn.append('<i class="fa fa-comment-o fa-lg faComment" aria-hidden="true"></i>' + comment);
             $(".popup-contanier ul").append(tmpcn);
         });
