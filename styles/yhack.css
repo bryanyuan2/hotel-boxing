@@ -175,9 +175,9 @@ display: inline-block;
 }
 
 .inputdom {
-	width: 240px;
-	height: 36px;
-	size: 24px;
+	width: 400px;
+	height: 48px;
+	font-size: 18px;
 }
 
 .pkdom {
@@ -252,6 +252,7 @@ display: inline-block;
 .pkoverall .defaultRound {
 	background-color: #00a1ff;
 	padding-left: 0;
+	font-weight: 700;
 }
 
 .pkoverall ul.defaultRound li {
