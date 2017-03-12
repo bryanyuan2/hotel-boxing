@@ -325,8 +325,13 @@ $(document).ready(function() {
 						var pros = data.data[getKeywordList[point]].pros.length;	
 
 						var liDom = document.createElement('li');
-					    $(liDom).append(pros.toString()).append('/').append(cons.toString());
 
+                        var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + pros + '</span>' +
+                                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + cons + '</span>';
+
+                        $(liDom).append(thumbs);
 					    $(ulDom).append(liDom);
 					}
 

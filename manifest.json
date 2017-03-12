@@ -44,6 +44,7 @@
       "styles/*",
       "*.ttf",
       "*.svg",
+      "images/medal.png",
       "images/like.png"
   ]
 }
