@@ -32,14 +32,6 @@
 	border-radius: 3px;
 }
 
-.addtoPKBtn {
-	font-size: 18px;
-	padding: 12px 6px 12px 6px;
-	position: absolute;
-	background-color: #0898ff;
-	color: #FFFFFF;
-}
-
 .averageScore {
 	color: #FFFFFF;
 	padding: 2px 2px 2px 2px;
@@ -257,5 +249,21 @@ display: inline-block;
 .pkoverall ul.defaultRound li {
 	text-align: center;
 	color: #FFFFFF !important;
+}
+
+.hotelboxingHeart {
+    display: inline-block;
+    background: transparent;
+}
+.addtoPKBtn {
+	font-size: 38px;
+	padding: 12px 6px 12px 6px;
+	position: absolute;
+    top: 150px;
+	color: #fff;
+    cursor: pointer;
+}
+.addtoPKBtn.selected {
+    color: red;
 }
 
