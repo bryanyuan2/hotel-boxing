@@ -347,13 +347,28 @@ $(document).ready(function() {
     	$('.cont').remove();
     	$('.contRound').remove();
     	$(pkoverall).show();
+        
 
+        var winHotels = {};
+        // {
+        //     query: {
+        //         "hotel": id,
+        //         "score": score
+        //     }
+        // }
+        getKeywordList.forEach( function(ele, ind) {
+            winHotels[ele] = {
+                hotel: 0,
+                score: 0
+            };
+        });
+        
 		// render all hotels
 		for(var hotel=0;hotel<hotelIdList.length;hotel++) {
-			var currHotel = hotelIdList[hotel];hotelIdList
+			var currHotel = hotelIdList[hotel];
 
 			lib.getHotelKeywordReviews(hotelIdList[hotel], getKeywordList, function(data){
-				//console.log('== getHotelKeywordReviews', data);
+				// console.log('== getHotelKeywordReviews', data);
 
 				var sectionDom = document.createElement('section'),
 			    	h4Dom = document.createElement('h4'),
@@ -393,11 +408,23 @@ $(document).ready(function() {
 
 					for(var point=0;point<getKeywordList.length;point++) {
 						//console.log('target', data.data[getKeywordList[point]]);
-						var cons = data.data[getKeywordList[point]].cons.length;
-						var pros = data.data[getKeywordList[point]].pros.length;	
+                        var kw = getKeywordList[point];
+                        var currScore = data.data[kw].score;
+
+                        if (currScore) {
+                            if (winHotels[kw].score<currScore) {
+                                winHotels[kw] = {
+                                    "hotel": getHotelIDc,
+                                    "score": currScore
+                                };  
+                            }
+                        }
+
+						var cons = data.data[kw].cons.length;
+						var pros = data.data[kw].pros.length;	
 
 						var liDom = document.createElement('li');
-                        $(liDom).addClass(data.data[getKeywordList[point]].query);
+                        $(liDom).addClass(data.data[kw].query);
 
                         var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
                                         '<span class="thumbs-cnt">' + pros + '</span>' +
@@ -408,12 +435,26 @@ $(document).ready(function() {
 					    $(ulDom).append(liDom);
 					}
 
+                    // give medal
+                    giveMedal(winHotels, getKeywordList);
+                    // getKeywordList.forEach( function(ele, ind) {
+                    //     var id = winHotels[ele].hotel;
+                    //     if (id == 0) return;
+                    //     console.log("#" + id + " ." + ele);
+                    //     console.log($("#" + id + " ." + ele));
+                    //     console.log($("#" + id ));
+                    //     var img = chrome.extension.getURL("images/medal.png");
+                    //     var medal = "<img src='" + img + "' class='medal' width='30'>";
+                    //     $("#" + id + " ." + ele).append(medal);
+                    // });
+
 					$(sectionDom).append(h4Dom).append(imglinkDom).append(ulDom);
 					$(pkdom).append(sectionDom);
 				});
 			});
 		}
 
+        // popup init
         commentPopupInit();
         // hover show popup
         // $(".pkoverall").on("click", "[class^='fa-thumbs-']", function(){
