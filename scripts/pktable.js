@@ -3,6 +3,10 @@
 //     kwList: []
 // }
 
+var TEMPLATE = {
+    "CommentLi": ""
+}
+
 function generatePkTable(){
     
     $.get(chrome.extension.getURL('view/pktable.html'), function(data) {
@@ -15,27 +19,34 @@ function generatePkTable(){
 
 function commentPopupInit(){
     $.get(chrome.extension.getURL('view/popup-comment.html'), function(data) {
-        $($.parseHTML(data)).appendTo('.pkdom');
+        $($.parseHTML(data)).appendTo('.pkoverall');
+        TEMPLATE.CommentLi = $(".popup-contanier li:first-child").empty().clone(true);
     });
 
     console.log('popup init');
 }
 
-function setCommentPopup(lib, id, kw, type){
-    var id = "733981";
-    var kw = "service";
-    var type = "pros"; // "pros" or "cons"
+function setCommentPopup(obj, type){
+    // var type = "pros"; // "pros" or "cons"
+
+    var id = obj.closest("section").attr("id");
+    var kw = [ obj.parent().attr("class") ];
 
     $(".popup-contanier ul").empty();
     lib.getHotelKeywordReviews(id, kw, function(data){
         var comments = data.data[kw][type];
         comments.forEach( function(ele, ind) {
-            var cn = $(".popup-contanier li").clone(true);
+            if (ind > 5) return;
+            var tmpcn = TEMPLATE.CommentLi.clone(true);
             var comment = ele.text;
-            console.log(comment);
-            cn.append(comment);
-            $(".popup-contanier ul").append(cn);
+            tmpcn.append(comment);
+            $(".popup-contanier ul").append(tmpcn);
         });
 
     });
+}
+
+
+function giveMedal(){
+
 }
