@@ -138,6 +138,7 @@ $(document).ready(function() {
 
 		console.log('== getFavHotelAry', getFavHotelAry);
     	generatePKBoxing(getFavHotelAry);
+        $(hotelCartCnt).hide();
 	});
 
 	// now cart default hotels via API
@@ -281,8 +282,8 @@ $(document).ready(function() {
 	    $(clsoedom).addClass('closebtn').append('X');
 	    $(pkoverall).append(clsoedom);
 	    $(clsoedom).on('click',function(){
-	    	console.log('qq click');
 	    	$('.pkoverall').hide();
+            $(hotelCartCnt).show();
 	    });
 
 		// render standrad column
