@@ -6,7 +6,7 @@
 $(document).ready(function() {
 
 	lib = new BDCLib();
-    // lib.debug();
+    lib.debug();
 
     var comments = [];
     var _store = {
@@ -64,8 +64,8 @@ $(document).ready(function() {
 			// create comment dom
 			var commentList = document.createElement('div'),
 				averageScore = document.createElement('span'),
-				getPros = data[item].pros || '',
-				getCons = data[item].cons || '',
+				getPros = data[item].pros_hl || '',
+				getCons = data[item].cons_hl || '',
 				commentCnt = '',
 				setCls = '';
 
@@ -76,8 +76,6 @@ $(document).ready(function() {
 				commentCnt = getCons;
 				setCls = 'cons';
 			}
-
-            // TODO add highlight
 
 			if (commentCnt) {
 				$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);

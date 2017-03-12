@@ -35,6 +35,10 @@
     overflow: hidden;
 }
 
+.booking-list .text b {
+    background-color: yellow;
+}
+
 .averageScore {
 	color: #FFFFFF;
 	padding: 2px;
