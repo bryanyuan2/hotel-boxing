@@ -1,13 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "booking-dot-com-hackathon-2017-chrome-ext",
-  "description": "booking-dot-com-hackathon-2017-chrome-ext",
+  "name": "Hotel Boxing",
+  "description": "Hotel Boxing for 2017 Booking.com Hackathon in Taipei",
   "version": "0.1",
-  "icons": {
-      "128": "icons/icon128x128.png",
-      "48": "icons/icon48x48.png",
-      "16": "icons/icon16x16.png"
-  },
   "permissions": [
     "storage", 
     "tabs",
