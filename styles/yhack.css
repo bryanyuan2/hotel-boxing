@@ -61,34 +61,46 @@
 }
 
 .hotelCartCnt {
-	background-image: url('http://cdn.paper4pc.com/images/blur-wallpaper-1.jpg');
-    color: #FFFFFF;
+    border: 1px solid #5cb9ff;
+    background-color: rgb(233, 240, 250);
+    box-shadow: -3px 3px 12px 0px rgba(50, 50, 50, 0.75);
 	position: fixed;
 	right: 0;
 	top: 0;
 	width: 150px;
 	min-height: 10px;
+    z-index: 999999;
+    padding: 6px;
 }
 
 .hotelCartText {
 	font-size: 14px;
-	margin-left: 3px;
+	padding-left: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .hotelCartItem {
-	padding: 6px 6px 6px 6px;
-	width: 120px;
+	padding: 6px;
+	width: 130px;
+    position: relative;
 }
 
 .hotelCartImg {
-	vertical-align: middle;
+    position: absolute;
 }
 
 .hotelCartNow {
-	background-color: #000000;
-	color: #FFFFFF;
-	font-size: 32px;
-	text-align: center;
+    margin-top: 12px !important;
+}
+
+.hotelCartClear {
+    display: inline-block;
+    margin-left: 6px;
+    cursor: pointer;
+    vertical-align: -14px;
 }
 
 .notFoundText {
@@ -224,3 +236,4 @@ display: inline-block;
 	position: fixed;
 	z-index: 300;
 }
+

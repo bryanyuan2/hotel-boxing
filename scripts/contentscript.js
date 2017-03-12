@@ -40,7 +40,8 @@ $(document).ready(function() {
 			like: 'images/like.png'
 		},
 		CONF_TRANS = {
-			boxingNow: 'Boxing Now'
+			boxingNow: 'Boxing Now',
+            clear: 'clear'
 		};
 	
     var _getFECache = function(hotel_id){
@@ -102,12 +103,13 @@ $(document).ready(function() {
 						.attr('data-id', hotel_id)
 						.append(hotelCartImg)				
 						.append(hotelCartText);
-		$(hotelCartCnt).append(hotelCartItem);
+		$(hotelCartCnt).prepend(hotelCartItem);
 	};
 
     var dom = document.createElement('div'),
     	hotelCartCnt = document.createElement('div'),
-    	hotelCartNow = document.createElement('div');
+    	hotelCartNow = document.createElement('a'),
+    	hotelCartClear = document.createElement('a');
 
     var hotelID = '',
     	hotelName = '',
@@ -115,7 +117,13 @@ $(document).ready(function() {
 
 	// cart container
 	$(hotelCartCnt).addClass('hotelCartCnt');
-	$(hotelCartNow).addClass('hotelCartNow').text(CONF_TRANS.boxingNow);
+	$(hotelCartNow).addClass('hotelCartNow b-button b-button_primary sr_cta_button').text(CONF_TRANS.boxingNow);
+    $(hotelCartClear).addClass('hotelCartClear').text(CONF_TRANS.clear);
+
+    $(hotelCartClear).on('click', function(){
+        lib.clearAllFavoriteHotels();
+        reloadCurrentCart();
+    });
 
 	$(hotelCartNow).on('click', function(){
 		console.log('== calling generatePKBoxing');
@@ -132,17 +140,21 @@ $(document).ready(function() {
 	});
 
 	// now cart default hotels via API
-	var getFavoriteHotelsDefault = lib.getFavoriteHotels();
-
-	console.log('getFavoriteHotelsDefault', getFavoriteHotelsDefault);
-	for (var hotelsIndex in getFavoriteHotelsDefault) {
-		var hName = getFavoriteHotelsDefault[hotelsIndex][0].name;
-		_addedHotelsInBoxingList(hName, hotelsIndex);
-	}
+    var reloadCurrentCart = function(){
+    	var getFavoriteHotelsDefault = lib.getFavoriteHotels();
+	    console.log('getFavoriteHotelsDefault', getFavoriteHotelsDefault);
+        $(hotelCartCnt).find('.hotelCartItem').remove();
+    	for (var hotelsIndex in getFavoriteHotelsDefault) {
+	    	var hName = getFavoriteHotelsDefault[hotelsIndex][0].name;
+		    _addedHotelsInBoxingList(hName, hotelsIndex);
+    	}
+    }
+    reloadCurrentCart();
 
     $(dom).addClass('booking-blur');
 
     $(hotelCartCnt).append(hotelCartNow);
+    $(hotelCartCnt).append(hotelCartClear);
 	$("body").append(dom).append(hotelCartCnt);
 	$(CONST_SELECTOR.getBookingBlur).hide(); 
 
@@ -177,10 +189,10 @@ $(document).ready(function() {
 			});
 
 			if (isExisted === false) {
-				_addedHotelsInBoxingList(getClickDataTitle, getClickDataID);
 				// added addFavoriteHotel
 				lib.addFavoriteHotel(getClickDataID, function(done){
 					console.log("added hotel id", getClickDataID);
+                    reloadCurrentCart();
 				});
 			}
 		});
