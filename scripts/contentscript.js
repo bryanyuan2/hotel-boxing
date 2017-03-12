@@ -285,7 +285,8 @@ $(document).ready(function() {
 
     // close btn
     var clsoedom = document.createElement('div');
-    $(clsoedom).addClass('closebtn').append('X');
+    $(clsoedom).addClass('closebtn').append('<i class="fa fa-times  fa-lg" aria-hidden="true"></i>');
+
     $(pkoverall).append(clsoedom);
     $(clsoedom).on('click',function(){
     	$('.pkoverall').hide();
@@ -349,13 +350,13 @@ $(document).ready(function() {
 				$('#' + gID).find('ul').append(addliDom);
 		    });
 		}
+
+        lib.addComparisonKeyword(getKw);
 	  }
 	});
 
     var generatePKBoxing = function(hotelIdList) {
-    	//var getKeywordList = lib.getComparisonKeywords();
-    	$('.cont').remove();
-    	$('.contRound').remove();
+    	getKeywordList = lib.getComparisonKeywords();
     	$(pkoverall).show();
         
 
@@ -470,24 +471,22 @@ $(document).ready(function() {
 				});
 			});
 		}
-
-        // popup init
-        commentPopupInit();
-
-        // hover show popup
-        $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(e){
-        	var getX = e.clientX || 0,
-        		getY = e.clientY || 0;
-            setCommentPopup($(this), "pros", getX, getY);
-        });
-
-        $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(e){
-        	var getX = e.clientX || 0,
-        		getY = e.clientY || 0;
-            setCommentPopup($(this), "cons", getX, getY);
-        });
     }
+    
+    // popup init
+    commentPopupInit();
 
+    // hover show popup
+    $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(e){
+    	var getX = e.clientX || 0,
+    		getY = e.clientY || 0;
+        setCommentPopup($(this), "pros", getX, getY);
+    });
 
+    $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(e){
+    	var getX = e.clientX || 0,
+    		getY = e.clientY || 0;
+        setCommentPopup($(this), "cons", getX, getY);
+    });
 });
 })();
