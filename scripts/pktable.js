@@ -26,24 +26,37 @@ function commentPopupInit(){
     console.log('popup init');
 }
 
-function setCommentPopup(obj, type){
+function setCommentPopup(obj, type, getX, getY){
     // var type = "pros"; // "pros" or "cons"
 
-    var id = obj.closest("section").attr("id");
-    var kw = [ obj.parent().attr("class") ];
+    var id = obj.closest("section").attr("id"),
+        kw = [ obj.parent().attr("class") ],
+        hasContent = false;
 
     $(".popup-contanier ul").empty();
     lib.getHotelKeywordReviews(id, kw, function(data){
         var comments = data.data[kw][type];
         comments.forEach( function(ele, ind) {
+            hasContent = true;
             if (ind > 5) return;
             var tmpcn = TEMPLATE.CommentLi.clone(true);
             var comment = ele.text;
-            tmpcn.append(comment);
+            tmpcn.append('<i class="fa fa-comment-o fa-lg faComment" aria-hidden="true"></i>' + comment);
             $(".popup-contanier ul").append(tmpcn);
         });
-
     });
+
+    if (hasContent) {
+        $(".popup-contanier").css({
+            'display': 'block',
+            'position': 'fixed',
+            'z-index': 300,
+            'left': getX,
+            'top': getY
+        }).show();
+    } else {
+        $(".popup-contanier").hide();
+    }
 }
 
 

@@ -425,41 +425,18 @@ $(document).ready(function() {
 		}
 
         commentPopupInit();
+
         // hover show popup
-        // $(".pkoverall").on("click", "[class^='fa-thumbs-']", function(){
-        $(".pkoverall").on("click", ".fa-thumbs-up", function(){
-            setCommentPopup($(this), "pros");
+        $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(e){
+        	var getX = e.clientX || 0,
+        		getY = e.clientY || 0;
+            setCommentPopup($(this), "pros", getX, getY);
         });
 
-        $(".pkoverall").on("click", ".fa-thumbs-down", function(){
-            setCommentPopup($(this), "cons");
-        });
-
-        $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(){
-            $(".popup-contanier").show();
-            setCommentPopup($(this), "pros");
-        });
-        $(".pkoverall").on("mouseleave", ".fa-thumbs-up", function(){
-            $(".popup-contanier").hide();
-        });
-        
-        $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(){
-            $(".popup-contanier").show();
-            setCommentPopup($(this), "cons");
-        });
-        $(".pkoverall").on("mouseleave", ".fa-thumbs-down", function(){
-            $(".popup-contanier").hide();
-        });
-
-
-        // $(".pkoverall .fa").hover(function(){
-        //     $(this).addClass("fa-lg");
-        // }, function(){
-        //     $(this).removeClass("fa-lg");
-        // });
-
-        $( ".sectionDom ul" ).on( "click", "li", function() {
-            console.log('popup');
+        $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(e){
+        	var getX = e.clientX || 0,
+        		getY = e.clientY || 0;
+            setCommentPopup($(this), "cons", getX, getY);
         });
     }
 
