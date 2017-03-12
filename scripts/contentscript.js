@@ -202,8 +202,14 @@ $(document).ready(function() {
 				});
 			}
 		});
+    });
+
+	$(CONST_SELECTOR.getBookingSel).mouseenter(function(){
+		// image blur 
+		$(this).find(CONST_SELECTOR.getItemPhoto).addClass('targetPhoto').css(CONST_STYLING.setBlurStyling);
 
 		// loading
+		var hotelID = $(this).find(CONST_SELECTOR.getItemPhoto).attr('id').replace('hotel_', '');
 		var loadingContainer = document.createElement('div'),
 			skThreeBounce = document.createElement('div'),
 			skBounce1 = document.createElement('div'),
@@ -238,12 +244,6 @@ $(document).ready(function() {
 				}
 			});
 		}
-    });
-
-	$(CONST_SELECTOR.getBookingSel).mouseenter(function(){
-		// image blur 
-		$(this).find(CONST_SELECTOR.getItemPhoto).addClass('targetPhoto').css(CONST_STYLING.setBlurStyling);
-
 		$(CONST_SELECTOR.getBookingBlur).show();
 	}).mouseleave(function(){
 		$(CONST_SELECTOR.getBookingBlur).hide();
