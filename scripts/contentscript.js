@@ -268,7 +268,7 @@ $(document).ready(function() {
 
 	    // close btn
 	    var clsoedom = document.createElement('div');
-	    $(clsoedom).addClass('closebtn');
+	    $(clsoedom).addClass('closebtn').append('X');
 	    $(pkoverall).append(clsoedom);
 	    $(clsoedom).on('click',function(){
 	    	console.log('qq click');
@@ -278,21 +278,23 @@ $(document).ready(function() {
 		// render standrad column
 		var sectionDom = document.createElement('section'),
 	    	h4Dom = document.createElement('h4'),
-	    	ulDom = document.createElement('ul');
+	    	ulDom = document.createElement('ul'),
+	    	defaultImgDom = document.createElement('div');
 
 	    $(sectionDom).attr('id', 'catepk').addClass('sectionDom').addClass('lift').addClass('plan-tier');
 	    $(h4Dom).append('ROUND');
+	    $(defaultImgDom).addClass('pkimg').addClass('empty');
 
 	    for (var index =0;index<getKeywordList.length;index++) {
 	    	var liDom = document.createElement('li');
 	    	liDom.append(getKeywordList[index]);
-	    	$(ulDom).append(liDom);
+	    	$(ulDom).addClass('defaultRound').append(liDom);
 	    }
 
-	    $(sectionDom).append(h4Dom).append(ulDom);
+	    $(sectionDom).append(h4Dom).append(defaultImgDom).append(ulDom);
 		$(pkdom).append(sectionDom);
 
-		//
+		// render all hotels
 		for(var hotel=0;hotel<hotelIdList.length;hotel++) {
 			var currHotel = hotelIdList[hotel];
 
@@ -302,7 +304,8 @@ $(document).ready(function() {
 				var sectionDom = document.createElement('section'),
 			    	h4Dom = document.createElement('h4'),
 			    	ulDom = document.createElement('ul'),
-			    	imgDom = document.createElement('img'),
+			    	imgDom = document.createElement('div'),
+			    	imglinkDom = document.createElement('a'),
 			    	linkDom = document.createElement('a');
 
 			    var getHotelID = data['id'];
@@ -324,11 +327,14 @@ $(document).ready(function() {
 							  .attr('target', '_blank')
 							  .append(getHotelName);
 
-					$(imgDom).attr('src', getPhotoUrl)
-							 .attr('width', '120')
-							 .attr('height', '80');
+					$(imgDom).addClass('pkimg').css("background-image", "url(" + getPhotoUrl + ")");
 
-				    $(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
+
+					$(imglinkDom).attr('href', getUrl)
+							  	 .attr('target', '_blank')
+							  	 .append(imgDom);
+
+					$(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
 				    $(h4Dom).append(linkDom);
 
 					for(var point=0;point<getKeywordList.length;point++) {
@@ -337,12 +343,17 @@ $(document).ready(function() {
 						var pros = data.data[getKeywordList[point]].pros.length;	
 
 						var liDom = document.createElement('li');
-					    $(liDom).append(pros.toString()).append('/').append(cons.toString());
 
+                        var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + pros + '</span>' +
+                                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + cons + '</span>';
+
+                        $(liDom).append(thumbs);
 					    $(ulDom).append(liDom);
 					}
 
-					$(sectionDom).append(h4Dom).append(ulDom);
+					$(sectionDom).append(h4Dom).append(imglinkDom).append(ulDom);
 					$(pkdom).append(sectionDom);
 				});
 			});
@@ -350,6 +361,12 @@ $(document).ready(function() {
 
 		$(pkoverall).append(pkinput).append(pkdom);
 		$('body').append(pkoverall);
+
+        commentPopupInit();
+        // hover show popup
+        $( ".sectionDom ul" ).on( "click", "li", function() {
+            console.log('popup');
+        });
 
 		// inputdom key press
 	    $('.inputdom').keypress(function (e) {
@@ -367,8 +384,13 @@ $(document).ready(function() {
 						pros = data.data[getKw].pros.length;
 
 					var addliDom = document.createElement('li');
-					$(addliDom).append(pros.toString()).append('/').append(cons.toString());
-					
+					var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + pros + '</span>' +
+                                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
+                                        '<span class="thumbs-cnt">' + cons + '</span>';
+
+                    $(addliDom).append(thumbs);
+
 					$('#' + gID).find('ul').append(addliDom);
 			    });
 			}
