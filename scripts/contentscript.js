@@ -305,7 +305,7 @@ $(document).ready(function() {
 
     for (var index =0;index<getKeywordList.length;index++) {
     	var liDom = document.createElement('li');
-    	liDom.append(getKeywordList[index]);
+    	$(liDom).append(getKeywordList[index] + '<span class="delKeyword" data-text="' + getKeywordList[index] + '"><i class="fa fa-times" aria-hidden="true"></i></span>').addClass('rowKeyword');
     	$(ulDom).addClass('defaultRound').append(liDom);
     }
 
@@ -314,6 +314,13 @@ $(document).ready(function() {
 
 	$(pkoverall).append(pkinput).append(pkdom).hide();
 	$('body').append(pkoverall);
+    
+    $(sectionDom).find('.delKeyword').on('click', function(){
+        var keyword = $(this).attr('data-text');
+        $('.sectionDom li.' + keyword).remove();
+        $(this).parent().remove();
+        lib.removeComparisonKeyword(keyword);
+    });
 
 	// inputdom key press
     $('.inputdom').on('keypress', function (e) {
@@ -357,6 +364,8 @@ $(document).ready(function() {
 
     var generatePKBoxing = function(hotelIdList) {
     	getKeywordList = lib.getComparisonKeywords();
+        $('.cont').remove();
+        $('.contRound').remove();
     	$(pkoverall).show();
         
 

@@ -277,3 +277,15 @@ display: inline-block;
     color: red;
 }
 
+.delKeyword {
+    display: inline-block;
+    visibility: hidden;
+    color: red;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.rowKeyword:hover .delKeyword {
+    visibility: visible;
+}
+

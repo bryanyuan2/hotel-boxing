@@ -332,6 +332,7 @@ function BDCLib(){
             return false;
         }
         _store.removeKey('cmpWords', keyword);
+        //_debug('keyword ' + keyword + ' removed', exports.getComparisonKeywords());
         return true;
     };
     
