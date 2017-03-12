@@ -60,15 +60,15 @@ function setCommentPopup(obj, type, getX, getY){
 
 
 function giveMedal(winHotels, getKeywordList){
-    console.log(winHotels);
     getKeywordList.forEach( function(ele, ind) {
         var id = winHotels[ele].hotel;
-        if (id == 0) return;
-        console.log("#" + id + " ." + ele);
-        console.log($("#" + id + " ." + ele));
-        console.log($("#" + id ));
-        var img = chrome.extension.getURL("images/medal.png");
-        var medal = "<img src='" + img + "' class='medal' width='30'>";
-        $("#" + id + " ." + ele).prepend(medal);
+        if (id != 0) {
+            var img = chrome.extension.getURL("images/medal.png");
+            var medal = "<img src='" + img + "' class='medal' width='30'>";
+
+            if ($("#" + id)) {
+                $("#" + id + " ." + ele).prepend(medal);
+            }
+        }
     });
 }

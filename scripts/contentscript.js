@@ -339,11 +339,27 @@ $(document).ready(function() {
 			getFavHotelAry.push(id);
 		}
 
+        var winHotels = {};
+        winHotels[getKw] = {
+            hotel: 0,
+            score: -999
+        };
+
 	    for(var hotel=0;hotel<getFavHotelAry.length;hotel++) {
 		    lib.getHotelKeywordReviews(getFavHotelAry[hotel], getKw, function(data){
 		    	var gID = data.id,
 		    		cons = data.data[getKw].cons.length,
 					pros = data.data[getKw].pros.length;
+                var score = data.data[getKw].score;
+
+                if (winHotels[getKw].hotel == 0) {
+                    winHotels[getKw] = {
+                        hotel: gID,
+                        score: score
+                    }
+                }
+                console.log('add key');
+                console.log(winHotels);
 
 				var addliDom = document.createElement('li');
                 $(addliDom).addClass(getKw);
@@ -368,14 +384,6 @@ $(document).ready(function() {
         $('.contRound').remove();
     	$(pkoverall).show();
         
-
-        var winHotels = {};
-        // {
-        //     query: {
-        //         "hotel": id,
-        //         "score": score
-        //     }
-        // }
         getKeywordList.forEach( function(ele, ind) {
             winHotels[ele] = {
                 hotel: 0,
@@ -385,105 +393,117 @@ $(document).ready(function() {
         
 		// render all hotels
 		for(var hotel=0;hotel<hotelIdList.length;hotel++) {
-			var currHotel = hotelIdList[hotel];
+			iteCb(hotel, hotelIdList);
+		}
+        
+    }
 
-			lib.getHotelKeywordReviews(hotelIdList[hotel], getKeywordList, function(data){
-				// console.log('== getHotelKeywordReviews', data);
+    var winHotels = {};
+    
+    var iteCb = function (hotel, hotelIdList){
+        var currHotel = hotelIdList[hotel];
+        lib.getHotelKeywordReviews(hotelIdList[hotel], getKeywordList, function(data){
+            // console.log('== getHotelKeywordReviews', data);
 
-				var sectionDom = document.createElement('section'),
-			    	h4Dom = document.createElement('h4'),
-			    	ulDom = document.createElement('ul'),
-			    	imgDom = document.createElement('div'),
-			    	imglinkDom = document.createElement('a'),
-			    	linkDom = document.createElement('a');
+            var sectionDom = document.createElement('section'),
+                h4Dom = document.createElement('h4'),
+                ulDom = document.createElement('ul'),
+                imgDom = document.createElement('div'),
+                imglinkDom = document.createElement('a'),
+                linkDom = document.createElement('a');
 
-			    var getHotelID = data['id'];
+            var getHotelID = data['id'];
 
-			    lib.getHotelInfo(getHotelID, function(hotelInfo){
-					console.log('getHotelInfo',hotelInfo);
+            lib.getHotelInfo(getHotelID, function(hotelInfo){
+                console.log('getHotelInfo',hotelInfo);
 
-					var getHotelName = '',
-						getUrl = hotelInfo[0].url,
-						getPhotoUrl = hotelInfo[0].photos[0].url_max300,
-						getHotelIDc = '';
+                var getHotelName = '',
+                    getUrl = hotelInfo[0].url,
+                    getPhotoUrl = hotelInfo[0].photos[0].url_max300,
+                    getHotelIDc = '';
 
-					if (hotelInfo[0]) {
-						getHotelName = hotelInfo[0].name;
-						getHotelIDc = hotelInfo[0].hotel_id;
-					}
+                if (hotelInfo[0]) {
+                    getHotelName = hotelInfo[0].name;
+                    getHotelIDc = hotelInfo[0].hotel_id;
+                }
 
-					$(linkDom).attr('href', getUrl)
-							  .attr('target', '_blank')
-							  .append(getHotelName);
+                $(linkDom).attr('href', getUrl)
+                          .attr('target', '_blank')
+                          .append(getHotelName);
 
-					$(imgDom).addClass('pkimg').css("background-image", "url(" + getPhotoUrl + ")");
+                $(imgDom).addClass('pkimg').css("background-image", "url(" + getPhotoUrl + ")");
 
 
-					$(imglinkDom).attr('href', getUrl)
-							  	 .attr('target', '_blank')
-							  	 .append(imgDom);
+                $(imglinkDom).attr('href', getUrl)
+                             .attr('target', '_blank')
+                             .append(imgDom);
 
-					$(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
-				    $(h4Dom).append(linkDom);
+                $(sectionDom).attr('id', getHotelIDc).addClass('sectionDom').addClass('lift').addClass('plan-tier').addClass('cont');
+                $(h4Dom).append(linkDom);
 
-					for(var point=0;point<getKeywordList.length;point++) {
-						//console.log('target', data.data[getKeywordList[point]]);
-                        var kw = getKeywordList[point];
-                        var currScore = data.data[kw].score;
+                for(var point=0;point<getKeywordList.length;point++) {
+                    //console.log('target', data.data[getKeywordList[point]]);
+                    var kw = getKeywordList[point];
+                    var currScore = data.data[kw].score;
 
-                        // console.log(kw);
-                        // console.log(getHotelIDc);
-                        // console.log(winHotels[kw].score);
-                        // console.log(currScore);
-                        if (currScore) {
-                            // console.log(winHotels[kw].score);
-                            if (winHotels[kw].score<currScore) {
-                                winHotels[kw] = {
-                                    "hotel": getHotelIDc,
-                                    "score": currScore
-                                };  
-                            }
-                        }
+                    if (currScore == false) {
+                        currScore = -0.1;
+                    }
 
-						var cons = data.data[kw].cons.length;
-						var pros = data.data[kw].pros.length;	
+                    if (winHotels[kw].score<currScore) {
+                        winHotels[kw] = {
+                            "hotel": getHotelIDc,
+                            "score": currScore
+                        };  
+                    }
 
-						var liDom = document.createElement('li');
-                        $(liDom).addClass(data.data[kw].query);
+                    var cons = data.data[kw].cons.length;
+                    var pros = data.data[kw].pros.length;   
 
-                        var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
-                                        '<span class="thumbs-cnt">' + pros + '</span>' +
-                                        '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
-                                        '<span class="thumbs-cnt">' + cons + '</span>';
+                    var liDom = document.createElement('li');
+                    $(liDom).addClass(data.data[kw].query);
 
-                        $(liDom).append(thumbs);
-					    $(ulDom).append(liDom);
-					}
+                    var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
+                                    '<span class="thumbs-cnt">' + pros + '</span>' +
+                                    '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
+                                    '<span class="thumbs-cnt">' + cons + '</span>';
 
-                    
+                    $(liDom).append(thumbs);
+                    $(ulDom).append(liDom);
+                }
 
-					$(sectionDom).append(h4Dom).append(imglinkDom).append(ulDom);
-					$(pkdom).append(sectionDom);
+                
 
-                    // give medal
+                $(sectionDom).append(h4Dom).append(imglinkDom).append(ulDom);
+                $(pkdom).append(sectionDom);
+
+                // give medal
+                // giveMedal(winHotels, getKeywordList);
+                // console.log("!@", hotel)
+                // console.log(hotelIdList.length)
+                if (hotel == +(hotelIdList.length-1)) {
+                    console.log(winHotels);
                     getKeywordList.forEach( function(ele, ind) {
+
                         var id = winHotels[ele].hotel;
+                        // console.log(ele);
+                        // console.log(id);
                         if (id != 0) {
                             var img = chrome.extension.getURL("images/medal.png");
                             var medal = "<img src='" + img + "' class='medal' width='30'>";
 
-                            if ($("#" + id)) {
+                            if ($("#" + id).length) {
                                 $("#" + id + " ." + ele).prepend(medal);
                             }
                         }
                     });
+                }
+                
 
-				});
-			});
-		}
-        
+            });
+        });
     }
-    
+
     // popup init
     commentPopupInit();
 
