@@ -328,6 +328,8 @@ $(document).ready(function() {
 					pros = data.data[getKw].pros.length;
 
 				var addliDom = document.createElement('li');
+                $(addliDom).addClass(getKw);
+
 				var thumbs = '<i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i>' + 
                                     '<span class="thumbs-cnt">' + pros + '</span>' +
                                     '<i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i>' + 
