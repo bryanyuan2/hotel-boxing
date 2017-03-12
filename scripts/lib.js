@@ -5,7 +5,9 @@ function BDCStorage() {
         cmpWords: {
             'breakfast': true,
             'parking': true,
-            'bathroom': true
+            'bathroom': true,
+            'bed': true,
+            'wifi': true
         }
     };
     this.restoreFromLocalStorage = function(){
@@ -126,7 +128,7 @@ function BDCLib(){
             }, function(data){
                 var item;
                 var highlight = function(text, keyword){
-                    var re = new RegExp('(' + keyword + ')', 'g');
+                    var re = new RegExp('(' + keyword + ')', 'gi');
                     var match = text.match(re);
                     return {
                             text: text.replace(re, '<b>$1</b>'),
@@ -237,52 +239,6 @@ function BDCLib(){
             cb(results);
         });
     };
-    
-    exports.debug = function(){
-        //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
-        exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
-
-        // cache test
-        //setTimeout(function(){
-        //    exports.getHotelInfo('725241', function(data){_debug('get info', data)});
-        //    exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
-        //}, 5000);
-        //
-        
-        // favorite hotel test
-        //exports.addFavoriteHotel('270817', function(){
-            //_debug('favorite list:', exports.getFavoriteHotels());
-            //exports.removeFavoriteHotel('270817');
-            //_debug('favorite list:', exports.getFavoriteHotels());
-        //});
-
-        //exports.getHotelKeywordReviews('725241', 'breakfast', function(data){_debug('keyword review', data);});
-
-        //福華
-        //exports.getHotelKeywordReviews('270817', 'breakfast', function(data){_debug('keyword review', data);});
-        //喜來登
-        //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
-        //exports.getHotelKeywordReviews('334583', ['breakfast', 'dinner', 'bed'], function(data){_debug('keyword review', data);});
-        //
-        // Burj Al Arab Jumeirah（阿拉伯塔朱美拉酒店）
-        //exports.getHotelKeywordReviews('73052', ['breakfast', 'dinner', 'bed', 'parking', 'staff', 'restaurants', 'location', 'facilities', 'waiting', 'spa', 'swimming', 'cost', 'bathroom', 'wi-fi', 'coffee', 'atmosphere', 'air-conditioning'], function(data){_debug('keyword review', data);});
-
-        // stemmer 
-        // Porter stemming algorithm. https://www.npmjs.com/package/stemmer
-        //_debug(stemmer('considerations'));
-
-        // Canal House Suites at Sofitel Legend The Grand Amsterdam 
-        //exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
-        // Crane Hotel Faralda
-        //exports.getHotelKeywordReviews('1139273', 'breakfast', function(data){_debug('keyword review', data);});
-    
-        // keywords test    
-        //exports.addComparisonKeyword('test');
-        //exports.addComparisonKeyword('kerker');
-        //exports.addComparisonKeyword('sound');
-        //exports.removeComparisonKeyword('kerker');
-        //_debug('keyword', exports.getComparisonKeywords());
-    };
 
     exports.addFavoriteHotel = function(hotelId, done){
         if(_store.getValue('favorite', hotelId)){
@@ -338,6 +294,52 @@ function BDCLib(){
     
     exports.getComparisonKeywords = function(){
         return Object.keys(_store.getStore('cmpWords'));
+    };
+    
+    exports.debug = function(){
+        //exports.getHotelInfo('725241', function(data){_debug('get info', data)});
+        //exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
+
+        // cache test
+        //setTimeout(function(){
+        //    exports.getHotelInfo('725241', function(data){_debug('get info', data)});
+        //    exports.getHotelReviews('725241', function(data){_debug('get reviews', data)});
+        //}, 5000);
+        //
+        
+        // favorite hotel test
+        //exports.addFavoriteHotel('270817', function(){
+            //_debug('favorite list:', exports.getFavoriteHotels());
+            //exports.removeFavoriteHotel('270817');
+            //_debug('favorite list:', exports.getFavoriteHotels());
+        //});
+
+        //exports.getHotelKeywordReviews('725241', 'breakfast', function(data){_debug('keyword review', data);});
+
+        //福華
+        //exports.getHotelKeywordReviews('270817', 'breakfast', function(data){_debug('keyword review', data);});
+        //喜來登
+        //exports.getHotelKeywordReviews('334583', 'breakfast', function(data){_debug('keyword review', data);});
+        //exports.getHotelKeywordReviews('334583', ['breakfast', 'dinner', 'bed'], function(data){_debug('keyword review', data);});
+        //
+        // Burj Al Arab Jumeirah（阿拉伯塔朱美拉酒店）
+        //exports.getHotelKeywordReviews('73052', ['breakfast', 'dinner', 'bed', 'parking', 'staff', 'restaurants', 'location', 'facilities', 'waiting', 'spa', 'swimming', 'cost', 'bathroom', 'wi-fi', 'coffee', 'atmosphere', 'air-conditioning'], function(data){_debug('keyword review', data);});
+
+        // stemmer 
+        // Porter stemming algorithm. https://www.npmjs.com/package/stemmer
+        //_debug(stemmer('considerations'));
+
+        // Canal House Suites at Sofitel Legend The Grand Amsterdam 
+        //exports.getHotelKeywordReviews('1279339', 'breakfast', function(data){_debug('keyword review', data);});
+        // Crane Hotel Faralda
+        //exports.getHotelKeywordReviews('1139273', 'breakfast', function(data){_debug('keyword review', data);});
+    
+        // keywords test    
+        //exports.addComparisonKeyword('test');
+        //exports.addComparisonKeyword('kerker');
+        //exports.addComparisonKeyword('sound');
+        //exports.removeComparisonKeyword('kerker');
+        //_debug('keyword', exports.getComparisonKeywords());
     };
     
     return exports;
