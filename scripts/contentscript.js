@@ -77,13 +77,11 @@ $(document).ready(function() {
 				setCls = 'cons';
 			}
 
-			if (commentCnt.length > CONST_CONFIGS.setCommentTrunc) {
-				commentCnt = data[item].pros.substring(0, CONST_CONFIGS.setCommentTrunc) + ' ...'; 
-			}
+            // TODO add highlight
 
 			if (commentCnt) {
 				$(averageScore).addClass('averageScore').addClass(setCls).text(data[item].average_score);
-				$(commentList).addClass('booking-list').append(averageScore).append(commentCnt);
+				$(commentList).addClass('booking-list').append(averageScore).append('<div class="text">' + commentCnt + '</div>');
 				$(CONST_SELECTOR.getBookingBlur).append(commentList);
 			}
 		}
