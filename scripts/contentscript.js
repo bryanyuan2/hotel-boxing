@@ -451,26 +451,28 @@ $(document).ready(function() {
 					    $(ulDom).append(liDom);
 					}
 
-                    // give medal
-                    // giveMedal(winHotels, getKeywordList);
-                    console.log(winHotels);
-                    getKeywordList.forEach( function(ele, ind) {
-                        var id = winHotels[ele].hotel;
-                        if (id != 0) {
-                            //console.log("#" + id + " ." + ele);
-                            // console.log($("#" + id + " ." + ele));
-                            //console.log($("#" + id ));
-                            var img = chrome.extension.getURL("images/medal.png");
-                            var medal = "<img src='" + img + "' class='medal' width='30'>";
-                            $("#" + id + " ." + ele).prepend(medal);
-                        }
-                    });
+                    
 
 					$(sectionDom).append(h4Dom).append(imglinkDom).append(ulDom);
 					$(pkdom).append(sectionDom);
+
+                    // give medal
+                    getKeywordList.forEach( function(ele, ind) {
+                        var id = winHotels[ele].hotel;
+                        if (id != 0) {
+                            var img = chrome.extension.getURL("images/medal.png");
+                            var medal = "<img src='" + img + "' class='medal' width='30'>";
+
+                            if ($("#" + id)) {
+                                $("#" + id + " ." + ele).prepend(medal);
+                            }
+                        }
+                    });
+
 				});
 			});
 		}
+        
     }
     
     // popup init
