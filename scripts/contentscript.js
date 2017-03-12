@@ -379,7 +379,7 @@ $(document).ready(function() {
         getKeywordList.forEach( function(ele, ind) {
             winHotels[ele] = {
                 hotel: 0,
-                score: 0
+                score: -999
             };
         });
         
@@ -431,7 +431,12 @@ $(document).ready(function() {
                         var kw = getKeywordList[point];
                         var currScore = data.data[kw].score;
 
+                        // console.log(kw);
+                        // console.log(getHotelIDc);
+                        // console.log(winHotels[kw].score);
+                        // console.log(currScore);
                         if (currScore) {
+                            // console.log(winHotels[kw].score);
                             if (winHotels[kw].score<currScore) {
                                 winHotels[kw] = {
                                     "hotel": getHotelIDc,
@@ -455,24 +460,28 @@ $(document).ready(function() {
 					    $(ulDom).append(liDom);
 					}
 
-                    // give medal
-                    giveMedal(winHotels, getKeywordList);
-                    // getKeywordList.forEach( function(ele, ind) {
-                    //     var id = winHotels[ele].hotel;
-                    //     if (id == 0) return;
-                    //     console.log("#" + id + " ." + ele);
-                    //     console.log($("#" + id + " ." + ele));
-                    //     console.log($("#" + id ));
-                    //     var img = chrome.extension.getURL("images/medal.png");
-                    //     var medal = "<img src='" + img + "' class='medal' width='30'>";
-                    //     $("#" + id + " ." + ele).append(medal);
-                    // });
+                    
 
 					$(sectionDom).append(h4Dom).append(imglinkDom).append(ulDom);
 					$(pkdom).append(sectionDom);
+
+                    // give medal
+                    getKeywordList.forEach( function(ele, ind) {
+                        var id = winHotels[ele].hotel;
+                        if (id != 0) {
+                            var img = chrome.extension.getURL("images/medal.png");
+                            var medal = "<img src='" + img + "' class='medal' width='30'>";
+
+                            if ($("#" + id)) {
+                                $("#" + id + " ." + ele).prepend(medal);
+                            }
+                        }
+                    });
+
 				});
 			});
 		}
+        
     }
     
     // popup init
