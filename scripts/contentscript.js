@@ -464,24 +464,22 @@ $(document).ready(function() {
 				});
 			});
 		}
-
-        // popup init
-        commentPopupInit();
-
-        // hover show popup
-        $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(e){
-        	var getX = e.clientX || 0,
-        		getY = e.clientY || 0;
-            setCommentPopup($(this), "pros", getX, getY);
-        });
-
-        $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(e){
-        	var getX = e.clientX || 0,
-        		getY = e.clientY || 0;
-            setCommentPopup($(this), "cons", getX, getY);
-        });
     }
+    
+    // popup init
+    commentPopupInit();
 
+    // hover show popup
+    $(".pkoverall").on("mouseenter", ".fa-thumbs-up", function(e){
+    	var getX = e.clientX || 0,
+    		getY = e.clientY || 0;
+        setCommentPopup($(this), "pros", getX, getY);
+    });
 
+    $(".pkoverall").on("mouseenter", ".fa-thumbs-down", function(e){
+    	var getX = e.clientX || 0,
+    		getY = e.clientY || 0;
+        setCommentPopup($(this), "cons", getX, getY);
+    });
 });
 })();
